@@ -11,5 +11,6 @@ namespace FoodAPI.Models.Models
         [MinLength(10)]
         [MaxLength(10)]
         public override string? PhoneNumber { get; set; }
+        public string? Address { get; set; }
     }
 }

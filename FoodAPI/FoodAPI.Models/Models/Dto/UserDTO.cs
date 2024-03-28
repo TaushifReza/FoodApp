@@ -25,6 +25,8 @@ namespace FoodAPI.Models.Models.Dto
         [DataType(DataType.Password)]
         [Compare(nameof(Password))]
         public string ConfirmPassword { get; set; } = string.Empty;
+        [Required]
+        public string Address { get; set; }
 
         [Required]
         public string Role { get; set; }

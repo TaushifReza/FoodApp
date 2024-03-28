@@ -1,18 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FoodAPI.Models.Models
+namespace FoodAPI.Models.Models.Dto
 {
-    public class SellerProfile
+    public class SellerProfileDTO
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [Required] 
+        [Required]
         public string Name { get; set; }
         [Required]
         public string Address { get; set; }
-        [ForeignKey("ApplicationUser")]
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
     }

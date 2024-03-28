@@ -1,4 +1,5 @@
 using System.Text;
+using FoodAPI;
 using FoodAPI.DataAccess.Data;
 using FoodAPI.DataAccess.DBInitializer;
 using FoodAPI.DataAccess.Repository;
@@ -24,7 +25,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ??
                          throw new InvalidOperationException("Connection String is not found"));
 });
-
+builder.Services.AddScoped<ISellerProfileRepository, SellerProfileRepository>();
+builder.Services.AddAutoMapper(typeof(MappingConfig));
 //Add Identity & JWT authentication
 //Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()

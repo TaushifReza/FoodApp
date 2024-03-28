@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using FoodAPI.DataAccess.Data;
 using FoodAPI.DataAccess.Repository.IRepository;
 using FoodAPI.Models.Models;
 using FoodAPI.Models.Models.Dto;
@@ -12,7 +13,7 @@ using static FoodAPI.Models.Models.Dto.ServiceResponsesDTO;
 
 namespace FoodAPI.DataAccess.Repository
 {
-    public class UserAccountRepository(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration config)
+    public class UserAccountRepository(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration config, ApplicationDbContext db)
         : IUserAccount
     {
         public async Task<GeneralResponse> CreateAccount(UserDTO userDTO)
@@ -32,7 +33,8 @@ namespace FoodAPI.DataAccess.Repository
                 PhoneNumber = userDTO.PhoneNumber,
                 Email = userDTO.Email,
                 PasswordHash = userDTO.Password,
-                UserName = userDTO.Email
+                UserName = userDTO.Email,
+                Address = userDTO.Address
             };
             var user = await userManager.FindByEmailAsync(newUser.Email);
             if (user is not null) return new GeneralResponse(false, "Email already exist!!!");
@@ -60,20 +62,30 @@ namespace FoodAPI.DataAccess.Repository
         public async Task<LoginResponse> LoginAccount(LoginDTO loginDTO)
         {
             if (loginDTO == null)
-                return new LoginResponse(false, null!, "Login container is empty");
+                return new LoginResponse(false, null!, "Login container is empty", null!, null!, null!);
 
             var getUser = await userManager.FindByEmailAsync(loginDTO.Email);
             if (getUser is null)
-                return new LoginResponse(false, null!, "Invalid email/password");
+                return new LoginResponse(false, null!, "Invalid email/password", null!, null!, null!);
 
             bool checkUserPasswords = await userManager.CheckPasswordAsync(getUser, loginDTO.Password);
             if (!checkUserPasswords)
-                return new LoginResponse(false, null!, "Invalid email/password");
+                return new LoginResponse(false, null!, "Invalid email/password", null!, null!, null!);
 
             var getUserRole = await userManager.GetRolesAsync(getUser);
             var userSession = new UserSessionDTO(getUser.Id, getUser.FullName, getUser.Email, getUserRole.First());
             string token = GenerateToken(userSession);
-            return new LoginResponse(true, token!, "Login completed");
+            if (getUserRole.First() == SD.Role_Admin || getUserRole.First() == SD.Role_Customer)
+            {
+                return new LoginResponse(true, token!, "Login completed",getUser,null,getUserRole.First());
+            }
+
+            var userProfile = db.SellerProfiles.FirstOrDefault(u => u.ApplicationUserId == getUser.Id);
+            if (userProfile == null)
+            {
+                return new LoginResponse(true, token!, "Login completed",getUser,null,getUserRole.First());
+            }
+            return new LoginResponse(true, token!, "Login completed", getUser, userProfile, getUserRole.First());
         }
 
         private string GenerateToken(UserSessionDTO user)

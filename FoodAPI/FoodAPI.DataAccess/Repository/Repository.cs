@@ -1,38 +1,63 @@
-﻿using FoodAPI.DataAccess.Repository.IRepository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using FoodAPI.DataAccess.Data;
+using FoodAPI.DataAccess.Repository.IRepository;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FoodAPI.DataAccess.Repository
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+        private readonly ApplicationDbContext _db;
+        internal DbSet<T> dbSet;
+        public Repository(ApplicationDbContext db)
         {
-            throw new NotImplementedException();
+            _db = db;
+            this.dbSet = _db.Set<T>();
         }
 
-        public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false)
+        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null)
         {
-            throw new NotImplementedException();
+            IQueryable<T> query = dbSet;
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            return await query.ToListAsync();
         }
 
-        public void Add(T entity)
+        public async Task<T> GetAsync(Expression<Func<T, bool>> filter = null, bool tracked = true)
         {
-            throw new NotImplementedException();
+            IQueryable<T> query = dbSet;
+            if (!tracked)
+            {
+                query = query.AsNoTracking();
+            }
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            return await query.FirstOrDefaultAsync();
         }
 
-        public void Remove(T entity)
+        public async Task CreateAsync(T entity)
         {
-            throw new NotImplementedException();
+            await dbSet.AddAsync(entity);
+            await SaveAsync();
         }
 
-        public void RemoveRange(IEnumerable<T> entity)
+        public async Task RemoveAsync(T entity)
         {
-            throw new NotImplementedException();
+            dbSet.Remove(entity);
+            await SaveAsync();
+        }
+
+        public async Task SaveAsync()
+        {
+            await _db.SaveChangesAsync();
         }
     }
 }

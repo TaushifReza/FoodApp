@@ -13,5 +13,6 @@ namespace FoodAPI.DataAccess.Data
         }
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<SellerProfile> SellerProfiles { get; set; }
     }
 }

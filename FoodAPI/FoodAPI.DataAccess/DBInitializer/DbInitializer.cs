@@ -57,10 +57,11 @@ namespace FoodAPI.DataAccess.DBInitializer
                    PhoneNumber = "1234567890",
                    Email = "admin@gmail.com",
                    PasswordHash = "Admin123!",
-                   UserName = "admin@gmail.com"
+                   UserName = "admin@gmail.com",
+                   Address = "adminAddress"
                 }, "Admin123!").GetAwaiter().GetResult();
 
-                ApplicationUser user = _db.ApplicationUsers.FirstOrDefault(u => u.Email == "admin@gmail.com");
+                var user = _db.ApplicationUsers.FirstOrDefault(u => u.Email == "admin@gmail.com");
                 _userManager.AddToRoleAsync(user, SD.Role_Admin).GetAwaiter().GetResult();
             }
 
