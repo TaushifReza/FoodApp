@@ -1,0 +1,34 @@
+#root{
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(250, 250, 247);
+  width: 100%;
+  height: 100vh;
+
+}
+
+#maincontainer{
+  display: flex;
+  justify-content: center;
+}
+
+#LoginContainer{
+  text-align: center;
+  margin-top: 7rem;
+  border-radius: 5%;
+  height: auto;
+  box-shadow: 2px 1px 22px -3px rgba(0,0,0,0.41);
+  
+}
+#LoginContainer h1{
+  width: 100%;
+  height: fit-content;
+  margin-bottom: 5%;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+#LoginContainer button{
+  font-size: larger;
+  font-weight: 500;
+  margin-bottom: 10%;
+}
