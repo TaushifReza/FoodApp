@@ -26,6 +26,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
                          throw new InvalidOperationException("Connection String is not found"));
 });
 builder.Services.AddScoped<ISellerProfileRepository, SellerProfileRepository>();
+builder.Services.AddScoped<ICategoryRepository,  CategoryRepository>();
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 //Add Identity & JWT authentication
 //Identity
@@ -68,6 +69,26 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddScoped<IUserAccount, UserAccountRepository>();
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 
+builder.Services.AddCors(options =>
+{
+    // React App
+    options.AddPolicy("reactApp", policyBuilder =>
+    {
+        policyBuilder.WithOrigins("htttp://localhost:5173");
+        policyBuilder.AllowAnyHeader();
+        policyBuilder.AllowAnyHeader();
+        policyBuilder.AllowCredentials();
+    });
+    // React Native App
+    options.AddPolicy("reactNativeApp", policyBuilder =>
+    {
+        policyBuilder.WithOrigins("");
+        policyBuilder.AllowAnyHeader();
+        policyBuilder.AllowAnyHeader();
+        policyBuilder.AllowCredentials();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -83,6 +104,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors("reactApp");
+app.UseCors("reactNativeApp");
 
 app.Run();
 

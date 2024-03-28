@@ -58,7 +58,6 @@ namespace FoodAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = $"{SD.Role_IndividualSeller}, {SD.Role_RestaurantSeller}")]
-        /*[Authorize(Roles = SD.Role_IndividualSeller,SD.Role_RestaurantSeller)]*/
         public async Task<ActionResult<APIResponse>> CreateSellerProfile([FromBody] SellerProfileCreateDTO createDTO)
         {
             try
