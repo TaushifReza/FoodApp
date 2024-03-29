@@ -8,14 +8,14 @@ function NewSeller() {
   const [RestaurantName, setRestaurantName] = useState();
   const [RestaurantAddress, setRestaurantAddress] = useState();
   const { state } = useLocation();
-    console.log(Userdata)
+  const navigate = useNavigate()
    
   function Sellernavigation() {
     if (state.role == "Individual Seller") {
-      const navigate = useNavigate("/Individual");
+      navigate("/Individual");
     }
     if (Userdata.role == "Restaurants Seller") {
-      const navigate = useNavigate("/Restaurant");
+       navigate ("/Restaurant");
     }
   }
 
