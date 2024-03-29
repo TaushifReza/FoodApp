@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodAPI.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240328185743_AddTable")]
-    partial class AddTable
+    [Migration("20240329190030_AddTables")]
+    partial class AddTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -127,6 +127,49 @@ namespace FoodAPI.DataAccess.Migrations
                     b.HasIndex("SellerProfileId");
 
                     b.ToTable("Category");
+                });
+
+            modelBuilder.Entity("FoodAPI.Models.Models.FoodItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FoodDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FoodName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("FoodPrice")
+                        .HasColumnType("float");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SellerProfileId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("SellerProfileId");
+
+                    b.ToTable("FoodItems");
                 });
 
             modelBuilder.Entity("FoodAPI.Models.Models.SellerProfile", b =>
@@ -296,6 +339,25 @@ namespace FoodAPI.DataAccess.Migrations
                         .HasForeignKey("SellerProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("SellerProfile");
+                });
+
+            modelBuilder.Entity("FoodAPI.Models.Models.FoodItem", b =>
+                {
+                    b.HasOne("FoodAPI.Models.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FoodAPI.Models.Models.SellerProfile", "SellerProfile")
+                        .WithMany()
+                        .HasForeignKey("SellerProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
 
                     b.Navigation("SellerProfile");
                 });
