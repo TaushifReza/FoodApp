@@ -7,6 +7,9 @@ import Admin from "./Components/Admin";
 import Restaurant from "./Components/Restaurant";
 import Individual from "./Components/Individual";
 import UserLoginProvider from "./context/userLoginProvider.jsx";
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+
+import "../node_modules/bootstrap/dist/js/bootstrap.min.js";
 
 const router = createBrowserRouter([
   {
