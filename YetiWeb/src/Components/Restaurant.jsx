@@ -8,7 +8,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 function Restaurant() {
     const { loggedin, setloggedin, Userdata } = useContext(userLogin);
     const navigate = useNavigate();
-    console.log(Userdata);
+
 
     function logout() {
       setloggedin(false);

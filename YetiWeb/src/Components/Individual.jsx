@@ -8,7 +8,7 @@ function Individual() {
 
   const { loggedin, setloggedin, Userdata } = useContext(userLogin);
   const navigate = useNavigate();
-  console.log(Userdata);
+  
 
   function logout() {
     setloggedin(false);
