@@ -37,6 +37,13 @@ namespace FoodAPI.Controllers
                 // Retrieve user claims from the JWT token
                 var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
                 var sellerProfile = await _dbSellerProfile.GetAsync(u => u.ApplicationUserId == userId);
+                if (sellerProfile == null)
+                {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.IsSuccess = false;
+                    _response.ErrorMessage = new List<string> { "Seller Profile not create!!!" };
+                    return BadRequest(_response);
+                }
                 var categoryExist = await _dbCategory.GetAllAsync(u=>u.SellerProfileId == sellerProfile.Id);
                 if (categoryExist.Count == 0)
                 {
@@ -75,6 +82,13 @@ namespace FoodAPI.Controllers
                 // Retrieve user claims from the JWT token
                 var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
                 var sellerProfile = await _dbSellerProfile.GetAsync(u => u.ApplicationUserId == userId);
+                if (sellerProfile == null)
+                {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.IsSuccess = false;
+                    _response.ErrorMessage = new List<string> { "Seller Profile not create!!!" };
+                    return BadRequest(_response);
+                }
                 var categoryExist = await _dbCategory.GetAsync(u => u.Id == id && u.SellerProfileId == sellerProfile.Id);
                 if (categoryExist == null)
                 {
@@ -106,6 +120,13 @@ namespace FoodAPI.Controllers
                 // Retrieve user claims from the JWT token
                 var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
                 var sellerProfile = await _dbSellerProfile.GetAsync(u => u.ApplicationUserId == userId);
+                if (sellerProfile == null)
+                {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.IsSuccess = false;
+                    _response.ErrorMessage = new List<string> { "Seller Profile not create!!!" };
+                    return BadRequest(_response);
+                }
                 var categoryExist = await _dbCategory.GetAsync(u => u.CategoryName.ToLower() == createDTO.CategoryName.ToLower() && u.SellerProfileId == sellerProfile.Id);
                 if (categoryExist != null)
                 {

@@ -68,7 +68,7 @@ namespace FoodAPI.Controllers
                 }
                 // Retrieve user claims from the JWT token
                 var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-                var profileExist = _dbSellerProfile.GetAsync(u=>u.ApplicationUserId==userId);
+                var profileExist = await _dbSellerProfile.GetAsync(u=>u.ApplicationUserId==userId);
                 if (profileExist != null)
                 {
                     _response.StatusCode = HttpStatusCode.BadRequest;
