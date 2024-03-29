@@ -47,12 +47,12 @@ function Login() {
       setUserdata(jasonData.user);
         
 
-    } else if (jasonData.role == "IndividualSeller") {
+    } else if (jasonData.role == "Individual Seller") {
         navigate("/Individual");
         setloggedin(true);
         setUserdata(jasonData.user);
     }
-    else if (jasonData.role == "RestaurantSeller") {
+    else if (jasonData.role == "Restaurants Seller") {
         navigate("/Restaurant")
         setloggedin(true);
         setUserdata(jasonData.user);
