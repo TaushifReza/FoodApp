@@ -40,24 +40,20 @@ function Login() {
       Requestoptions
     );
     const jasonData = await Fetch.json();
-    
+
     if (jasonData.role == "Admin") {
       navigate("/Admin");
       setloggedin(true);
       setUserdata(jasonData.user);
-        
-
-    } else if (jasonData.role == "IndividualSeller") {
-        navigate("/Individual");
-        setloggedin(true);
-        setUserdata(jasonData.user);
-    }
-    else if (jasonData.role == "RestaurantSeller") {
-        navigate("/Restaurant")
-        setloggedin(true);
-        setUserdata(jasonData.user);
-    } 
-    else {
+    } else if (jasonData.role == "Individual Seller") {
+      navigate("/Individual");
+      setloggedin(true);
+      setUserdata(jasonData.user);
+    } else if (jasonData.role == "Restaurants Seller") {
+      navigate("/Restaurant");
+      setloggedin(true);
+      setUserdata(jasonData.user);
+    } else {
       loginButtonValidation(data.email, data.password);
     }
   }
@@ -71,7 +67,9 @@ function Login() {
               <div className="d-flex align-items-center min-vh-100">
                 <div className="w-100 d-block bg-white shadow-lg rounded my-5">
                   <div className="row">
-                    <div className="col-lg-5 d-none d-lg-block bg-login rounded-left bg-black"><h1> RKB Photo</h1></div>
+                    <div className="col-lg-5 d-none d-lg-block bg-login rounded-left bg-black">
+                      <h1> RKB Photo</h1>
+                    </div>
                     <div className="col-lg-7">
                       <div className="p-5">
                         <div className="text-center mb-5">
