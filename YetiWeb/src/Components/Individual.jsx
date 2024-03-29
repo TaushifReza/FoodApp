@@ -2,7 +2,7 @@ import "./ComponentCSS/Individual.css";
 import { useContext } from "react";;
 import userLogin from "../context/UserLogin";
 import Button from "@mui/material/Button";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 
 function Individual() {
 

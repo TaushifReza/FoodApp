@@ -23,7 +23,7 @@ function Login() {
 
   async function loginButton() {
     const data = {
-      email: email.trim(),
+      email: email.trim().toLocaleLowerCase(),
       password: password.trim(),
     };
     const Requestoptions = {
@@ -45,19 +45,23 @@ function Login() {
       navigate("/Admin");
       setloggedin(true);
       setUserdata(jasonData.user);
-        
-
     } else if (jasonData.role == "Individual Seller") {
+      setloggedin(true);
+      setUserdata(jasonData.user);
+      if (jasonData.userProfile == null) {
+        navigate("/NewSeller", { state: { role: "Individual Seller" } });
+      } else {
         navigate("/Individual");
-        setloggedin(true);
-        setUserdata(jasonData.user);
-    }
-    else if (jasonData.role == "Restaurants Seller") {
-        navigate("/Restaurant")
-        setloggedin(true);
-        setUserdata(jasonData.user);
-    } 
-    else {
+      }
+    } else if (jasonData.role == "Restaurants Seller") {
+      setloggedin(true);
+      setUserdata(jasonData.user);
+      if (jasonData.userProfile == null) {
+        navigate("/NewSeller", { state: { role: "Restaurants Seller" } });
+      } else {
+        navigate("/Restaurant");
+      }
+    } else {
       loginButtonValidation(data.email, data.password);
     }
   }
@@ -71,8 +75,8 @@ function Login() {
               <div className="d-flex align-items-center min-vh-100">
                 <div className="w-100 d-block bg-white shadow-lg rounded my-5">
                   <div className="row">
-                    <div className="col-lg-5 d-none d-lg-block bg-login rounded-left bg-black">
-                      <h1> RKB Photo</h1>
+                    <div className="col-lg-5 d-none d-lg-block bg-login rounded-left bg-black ">
+                      <h1> Photo</h1>
                     </div>
                     <div className="col-lg-7">
                       <div className="p-5">
@@ -114,8 +118,8 @@ function Login() {
                           </div>
                           <input
                             type="button"
-                            className="btn btn-success btn-block waves-effect waves-light"
-                            value="Login"
+                            className="btn btn-success btn-block waves-effect waves-light w-100"
+                            value="Log In"
                             onClick={loginButton}
                           ></input>
 

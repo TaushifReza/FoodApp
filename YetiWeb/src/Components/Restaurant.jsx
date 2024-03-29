@@ -1,6 +1,5 @@
 import "./ComponentCSS/Restaurant.css";
 import { useContext } from "react";
-
 import userLogin from "../context/UserLogin";
 import Button from "@mui/material/Button";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -8,7 +7,6 @@ import { Navigate, useNavigate } from "react-router-dom";
 function Restaurant() {
     const { loggedin, setloggedin, Userdata } = useContext(userLogin);
     const navigate = useNavigate();
-
 
     function logout() {
       setloggedin(false);
