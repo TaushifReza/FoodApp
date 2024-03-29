@@ -74,9 +74,9 @@ builder.Services.AddCors(options =>
     // React App
     options.AddPolicy("reactApp", policyBuilder =>
     {
-        policyBuilder.WithOrigins("htttp://localhost:5173");
+        policyBuilder.WithOrigins("http://localhost:5173");
         policyBuilder.AllowAnyHeader();
-        policyBuilder.AllowAnyHeader();
+        policyBuilder.AllowAnyMethod();
         policyBuilder.AllowCredentials();
     });
     // React Native App
