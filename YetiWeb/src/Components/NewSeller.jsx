@@ -1,21 +1,22 @@
 import { useContext, useState } from "react";
 import userLogin from "../context/UserLogin";
-import { Navigate,useLocation } from "react-router-dom";
+import { Navigate,useLocation,useNavigate } from "react-router-dom";
 import svg from "../assets/4029975_16376.svg";
 
 function NewSeller() {
-  const { loggedin, setloggedin, Userdata } = useContext(userLogin);
+  const { loggedin, setloggedin, Userdata, LoginToken} = useContext(userLogin);
+  
   const [RestaurantName, setRestaurantName] = useState();
   const [RestaurantAddress, setRestaurantAddress] = useState();
   const { state } = useLocation();
-    console.log(Userdata)
+  const navigate = useNavigate()
    
   function Sellernavigation() {
     if (state.role == "Individual Seller") {
-      const navigate = useNavigate("/Individual");
+      navigate("/Individual");
     }
     if (Userdata.role == "Restaurants Seller") {
-      const navigate = useNavigate("/Restaurant");
+       navigate ("/Restaurant");
     }
   }
 
@@ -30,6 +31,7 @@ function NewSeller() {
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
+         "Authorization": "Bearer " + LoginToken,
       },
       body: JSON.stringify(data),
     };

@@ -9,7 +9,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [showAlertnull, setShowAlertnull] = useState(false);
-  const { setloggedin, setUserdata } = useContext(userLogin);
+  const { setloggedin, setUserdata, setLoginToken } = useContext(userLogin);
 
   function loginButtonValidation(email, password) {
     if (email === "" || password === "") {
@@ -39,13 +39,17 @@ function Login() {
       "https://localhost:7041/api/User/login",
       Requestoptions
     );
+    
     const jasonData = await Fetch.json();
 
     if (jasonData.role == "Admin") {
+      console.log(jasonData.token);
+      setLoginToken(jasonData.token);
       navigate("/Admin");
       setloggedin(true);
       setUserdata(jasonData.user);
     } else if (jasonData.role == "Individual Seller") {
+      setLoginToken(jasonData.token);
       setloggedin(true);
       setUserdata(jasonData.user);
       if (jasonData.userProfile == null) {
@@ -54,6 +58,7 @@ function Login() {
         navigate("/Individual");
       }
     } else if (jasonData.role == "Restaurants Seller") {
+      setLoginToken(jasonData.token);
       setloggedin(true);
       setUserdata(jasonData.user);
       if (jasonData.userProfile == null) {
