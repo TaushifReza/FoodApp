@@ -1,5 +1,6 @@
 ﻿using FoodAPI.DataAccess.Repository.IRepository;
 using FoodAPI.Models.Models.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodAPI.Controllers

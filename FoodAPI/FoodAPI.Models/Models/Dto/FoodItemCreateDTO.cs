@@ -6,9 +6,9 @@ namespace FoodAPI.Models.Models.Dto
 {
     public class FoodItemCreateDTO
     {
-        [Required]
+        /*[Required]
         [NotMapped]
-        public IFormFile? FoodImage { get; set; }
+        public IFormFile? FoodImage { get; set; }*/
         [Required]
         public string FoodName { get; set; }
         public string? FoodDescription { get; set; }

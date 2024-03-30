@@ -80,12 +80,7 @@ namespace FoodAPI.Controllers
                 createDTO.ApplicationUserId = userId;
 
                 SellerProfile sellerProfile = _mapper.Map<SellerProfile>(createDTO);
-                /*SellerProfile sellerProfile = new SellerProfile
-                {
-                    Name = createDTO.Name,
-                    Address = createDTO.Address,
-                    ApplicationUserId = createDTO.ApplicationUserId
-                };*/
+                
                 await _dbSellerProfile.CreateAsync(sellerProfile);
                 _response.Result = sellerProfile;
                 _response.StatusCode = HttpStatusCode.Created;

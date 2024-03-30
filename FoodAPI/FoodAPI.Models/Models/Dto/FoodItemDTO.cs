@@ -12,6 +12,8 @@ namespace FoodAPI.Models.Models.Dto
         public string? FoodDescription { get; set; }
         [Required]
         public double FoodPrice { get; set; }
+        [Required]
+        public string ImageUrl { get; set; }
         public DateTime CreateDate { get; set; } = DateTime.Now;
         public DateTime UpdatedDate { get; set; } = DateTime.Now;
         [ForeignKey("SellerProfile")]

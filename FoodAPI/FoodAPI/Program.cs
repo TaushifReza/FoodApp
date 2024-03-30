@@ -27,6 +27,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 builder.Services.AddScoped<ISellerProfileRepository, SellerProfileRepository>();
 builder.Services.AddScoped<ICategoryRepository,  CategoryRepository>();
+builder.Services.AddScoped<IFoodItemRepository, FoodItemRepository>();
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 //Add Identity & JWT authentication
 //Identity
