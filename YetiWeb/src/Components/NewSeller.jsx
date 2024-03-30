@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import userLogin from "../context/UserLogin";
 import { Navigate,useLocation,useNavigate } from "react-router-dom";
-import svg from "../assets/4029975_16376.svg";
+
 
 function NewSeller() {
   const { loggedin, setloggedin, Userdata, LoginToken} = useContext(userLogin);

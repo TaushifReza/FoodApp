@@ -11,7 +11,6 @@ import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../node_modules/bootstrap/dist/js/bootstrap.min.js";
 import NewSeller from "./Components/NewSeller.jsx";
 
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -31,7 +30,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/NewSeller",
-    element: <NewSeller/>
+    element: <NewSeller />,
   },
 ]);
 ReactDOM.createRoot(document.getElementById("root")).render(
