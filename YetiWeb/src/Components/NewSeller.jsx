@@ -4,7 +4,8 @@ import { Navigate,useLocation,useNavigate } from "react-router-dom";
 
 
 function NewSeller() {
-  const { loggedin, setloggedin, Userdata, LoginToken} = useContext(userLogin);
+  const { loggedin, setloggedin, Userdata, LoginToken, UserProfiledata } =
+    useContext(userLogin);
   
   const [RestaurantName, setRestaurantName] = useState();
   const [RestaurantAddress, setRestaurantAddress] = useState();
@@ -12,10 +13,13 @@ function NewSeller() {
   const navigate = useNavigate()
    
   function Sellernavigation() {
+    UserProfiledata()
     if (state.role == "Individual Seller") {
+
       navigate("/Individual");
     }
-    if (Userdata.role == "Restaurants Seller") {
+    UserProfiledata()
+    if (state.role == "Restaurants Seller") {
        navigate ("/Restaurant");
     }
   }

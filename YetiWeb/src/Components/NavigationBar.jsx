@@ -11,8 +11,8 @@ function Navbar() {
   const { loggedin, setloggedin, Userdata } = useContext(userLogin);
   const [order, setOrder]=useState(false);
   const [menu, setMenu]=useState(false);
-  const [profile, setProfile] = useState(false);
-  const [btnToggle, SetbtnToggle] = useState(false);
+  const [profile, setProfile] = useState(true);
+  const [btnToggle, SetbtnToggle] = useState(true);
   const navigate = useNavigate();
   let toggleClass = btnToggle ? "expand" : "";
 
