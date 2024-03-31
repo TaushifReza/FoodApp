@@ -1,9 +1,13 @@
 
 
-function Order(){
-    return(
-        <h1>Order</h1>
-    )
+function Order() {
+
+
+  return (
+    <>
+      
+    </>
+  );
 }
 
 export default Order;
