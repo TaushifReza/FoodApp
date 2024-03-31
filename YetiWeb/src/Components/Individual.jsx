@@ -1,36 +1,11 @@
-import "./ComponentCSS/Individual.css";
-import { useContext } from "react";;
-import userLogin from "../context/UserLogin";
-import Button from "@mui/material/Button";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+
+
+import Navbar from "./NavigationBar";
 
 function Individual() {
-
-  const { loggedin, setloggedin, Userdata } = useContext(userLogin);
-  const navigate = useNavigate();
-  
-
-  function logout() {
-    setloggedin(false);
-    navigate("/");
-  }
   return (
-    <> 
-    {!loggedin && <Navigate to={"/"} />}
-      <h1>Individual</h1>
-      <br />
-      <h2>{Userdata.id}</h2>
-      <h2>{Userdata.fullName}</h2>
-      <h2>{Userdata.phoneNumber}</h2>
-      <h2>{Userdata.address}</h2>
-      <h2>{Userdata.userName}</h2>
-      <Button
-        variant="contained"
-        sx={{ width: 120, height: 50 }}
-        onClick={logout}
-      >
-        Logout
-      </Button>
+    <>
+      <Navbar></Navbar>
     </>
   );
 }
