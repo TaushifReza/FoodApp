@@ -44,7 +44,6 @@ function Login() {
     const jasonData = await Fetch.json();
 
     if (jasonData.role == "Admin") {
-      console.log(jasonData.token);
       setLoginToken(jasonData.token);
       navigate("/Admin");
       setloggedin(true);
