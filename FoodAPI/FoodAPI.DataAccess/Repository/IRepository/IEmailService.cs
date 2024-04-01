@@ -2,7 +2,8 @@
 
 namespace FoodAPI.DataAccess.Repository.IRepository
 {
-    public interface ISellerProfileRepository : IRepository<SellerProfile>
+    public interface IEmailService
     {
+        public Task SendEmailAsync(MailRequest mailRequest);
     }
 }

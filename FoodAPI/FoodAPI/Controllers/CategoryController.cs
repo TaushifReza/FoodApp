@@ -29,7 +29,7 @@ namespace FoodAPI.Controllers
         }
 
         [HttpGet(Name = "GetAllCategory")]
-        [Authorize(Roles = $"{SD.Role_IndividualSeller}, {SD.Role_RestaurantSeller}")]
+        [Authorize(Roles = $"{SD.RoleIndividualSeller}, {SD.RoleRestaurantSeller}")]
         public async Task<ActionResult<APIResponse>> GetAllCategory()
         {
             try
@@ -41,7 +41,7 @@ namespace FoodAPI.Controllers
                 {
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     _response.IsSuccess = false;
-                    _response.ErrorMessage = new List<string> { "Seller Profile not create!!!" };
+                    _response.ErrorMessage = new List<string?> { "Seller Profile not create!!!" };
                     return BadRequest(_response);
                 }
                 var categoryExist = await _dbCategory.GetAllAsync(u=>u.SellerProfileId == sellerProfile.Id);
@@ -49,7 +49,7 @@ namespace FoodAPI.Controllers
                 {
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     _response.IsSuccess = false;
-                    _response.ErrorMessage = new List<string> { "You have not add any category!!!" };
+                    _response.ErrorMessage = new List<string?> { "You have not add any category!!!" };
                     return BadRequest(_response);
                 }
 
@@ -60,13 +60,13 @@ namespace FoodAPI.Controllers
             }
             catch (Exception e)
             {
-                _response.ErrorMessage = new List<string>() { e.ToString() };
+                _response.ErrorMessage = new List<string?>() { e.ToString() };
             }
             return _response;
         }
 
         [HttpGet("{id:int}", Name = "GetCategory")]
-        [Authorize(Roles = $"{SD.Role_IndividualSeller}, {SD.Role_RestaurantSeller}")]
+        [Authorize(Roles = $"{SD.RoleIndividualSeller}, {SD.RoleRestaurantSeller}")]
         public async Task<ActionResult<APIResponse>> GetCategory(int id)
         {
             try
@@ -75,7 +75,7 @@ namespace FoodAPI.Controllers
                 {
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     _response.IsSuccess = false;
-                    _response.ErrorMessage = new List<string> { "Category not found!!!" };
+                    _response.ErrorMessage = new List<string?> { "Category not found!!!" };
                     return BadRequest(_response);
                 }
 
@@ -86,7 +86,7 @@ namespace FoodAPI.Controllers
                 {
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     _response.IsSuccess = false;
-                    _response.ErrorMessage = new List<string> { "Seller Profile not create!!!" };
+                    _response.ErrorMessage = new List<string?> { "Seller Profile not create!!!" };
                     return BadRequest(_response);
                 }
                 var categoryExist = await _dbCategory.GetAsync(u => u.Id == id && u.SellerProfileId == sellerProfile.Id);
@@ -102,13 +102,13 @@ namespace FoodAPI.Controllers
             }
             catch (Exception e)
             {
-                _response.ErrorMessage = new List<string>() { e.ToString() };
+                _response.ErrorMessage = new List<string?>() { e.ToString() };
             }
             return _response;
         }
 
         [HttpPost]
-        [Authorize(Roles = $"{SD.Role_IndividualSeller}, {SD.Role_RestaurantSeller}")]
+        [Authorize(Roles = $"{SD.RoleIndividualSeller}, {SD.RoleRestaurantSeller}")]
         public async Task<ActionResult<APIResponse>> CreateCategory([FromBody] CategoryCreateDTO createDTO)
         {
             try
@@ -124,7 +124,7 @@ namespace FoodAPI.Controllers
                 {
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     _response.IsSuccess = false;
-                    _response.ErrorMessage = new List<string> { "Seller Profile not create!!!" };
+                    _response.ErrorMessage = new List<string?> { "Seller Profile not create!!!" };
                     return BadRequest(_response);
                 }
                 var categoryExist = await _dbCategory.GetAsync(u => u.CategoryName.ToLower() == createDTO.CategoryName.ToLower() && u.SellerProfileId == sellerProfile.Id);
@@ -132,7 +132,7 @@ namespace FoodAPI.Controllers
                 {
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     _response.IsSuccess = false;
-                    _response.ErrorMessage = new List<string> { "Category with this name already exist!!!"};
+                    _response.ErrorMessage = new List<string?> { "Category with this name already exist!!!"};
                     return BadRequest(_response);
                 }
 

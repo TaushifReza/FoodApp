@@ -28,7 +28,7 @@ namespace FoodAPI.Controllers
         }
 
         [HttpGet("{id:int}", Name = "GetSellerProfile")]
-        [Authorize(Roles = $"{SD.Role_IndividualSeller}, {SD.Role_RestaurantSeller}")]
+        [Authorize(Roles = $"{SD.RoleIndividualSeller}, {SD.RoleRestaurantSeller}")]
         public async Task<ActionResult<APIResponse>> GetSellerProfile(int id)
         {
             try
@@ -51,13 +51,13 @@ namespace FoodAPI.Controllers
             }
             catch (Exception e)
             {
-                _response.ErrorMessage = new List<string>() { e.ToString() };
+                _response.ErrorMessage = new List<string?>() { e.ToString() };
             }
             return _response;
         }
 
         [HttpPost]
-        [Authorize(Roles = $"{SD.Role_IndividualSeller}, {SD.Role_RestaurantSeller}")]
+        [Authorize(Roles = $"{SD.RoleIndividualSeller}, {SD.RoleRestaurantSeller}")]
         public async Task<ActionResult<APIResponse>> CreateSellerProfile([FromBody] SellerProfileCreateDTO createDTO)
         {
             try
@@ -72,7 +72,7 @@ namespace FoodAPI.Controllers
                 if (profileExist != null)
                 {
                     _response.StatusCode = HttpStatusCode.BadRequest;
-                    _response.ErrorMessage = new List<string> { "Seller Profile already created" };
+                    _response.ErrorMessage = new List<string?> { "Seller Profile already created" };
                     _response.IsSuccess = false;
                     return Ok(_response);
                 }
@@ -89,7 +89,7 @@ namespace FoodAPI.Controllers
             }
             catch (Exception e)
             {
-                _response.ErrorMessage = new List<string>() { e.ToString() };
+                _response.ErrorMessage = new List<string?>() { e.ToString() };
             }
             return _response;
         }

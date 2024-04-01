@@ -38,16 +38,16 @@ namespace FoodAPI.DataAccess.DBInitializer
             }
 
             //create role if they are not created
-            if (_roleManager.FindByNameAsync(SD.Role_Admin).GetAwaiter()
+            if (_roleManager.FindByNameAsync(SD.RoleAdmin).GetAwaiter()
                     .GetResult() is null)
             {
-                _roleManager.CreateAsync(new IdentityRole(){Name = SD.Role_Customer})
+                _roleManager.CreateAsync(new IdentityRole(){Name = SD.RoleCustomer})
                     .GetAwaiter().GetResult();
-                _roleManager.CreateAsync(new IdentityRole() {Name = SD.Role_DeliveryRider })
+                _roleManager.CreateAsync(new IdentityRole() {Name = SD.RoleDeliveryRider })
                     .GetAwaiter().GetResult();
-                _roleManager.CreateAsync(new IdentityRole() { Name = SD.Role_IndividualSeller })
+                _roleManager.CreateAsync(new IdentityRole() { Name = SD.RoleIndividualSeller })
                     .GetAwaiter().GetResult();
-                _roleManager.CreateAsync(new IdentityRole() { Name = SD.Role_RestaurantSeller })
+                _roleManager.CreateAsync(new IdentityRole() { Name = SD.RoleRestaurantSeller })
                     .GetAwaiter().GetResult();
 
                 //if role are not created, then we will create admin user as well
@@ -62,7 +62,7 @@ namespace FoodAPI.DataAccess.DBInitializer
                 }, "Admin123!").GetAwaiter().GetResult();
 
                 var user = _db.ApplicationUsers.FirstOrDefault(u => u.Email == "admin@gmail.com");
-                _userManager.AddToRoleAsync(user, SD.Role_Admin).GetAwaiter().GetResult();
+                _userManager.AddToRoleAsync(user, SD.RoleAdmin).GetAwaiter().GetResult();
             }
 
             return;

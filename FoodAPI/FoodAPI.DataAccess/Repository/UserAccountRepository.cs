@@ -13,17 +13,17 @@ using static FoodAPI.Models.Models.Dto.ServiceResponsesDTO;
 
 namespace FoodAPI.DataAccess.Repository
 {
-    public class UserAccountRepository(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration config, ApplicationDbContext db)
+    public class UserAccountRepository(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration config, ApplicationDbContext db, IEmailService emailService)
         : IUserAccount
     {
         public async Task<GeneralResponse> CreateAccount(UserDTO userDTO)
         {
             if (userDTO is null) return new GeneralResponse(false, "Model is empty");
-            if (userDTO.Role != SD.Role_Customer &&
-                userDTO.Role != SD.Role_DeliveryRider &&
-                userDTO.Role != SD.Role_Admin &&
-                userDTO.Role != SD.Role_IndividualSeller &&
-                userDTO.Role != SD.Role_RestaurantSeller)
+            if (userDTO.Role != SD.RoleCustomer &&
+                userDTO.Role != SD.RoleDeliveryRider &&
+                userDTO.Role != SD.RoleAdmin &&
+                userDTO.Role != SD.RoleIndividualSeller &&
+                userDTO.Role != SD.RoleRestaurantSeller)
             {
                 return new GeneralResponse(false, "Invalid role");
             }
@@ -36,6 +36,7 @@ namespace FoodAPI.DataAccess.Repository
                 UserName = userDTO.Email,
                 Address = userDTO.Address
             };
+
             var user = await userManager.FindByEmailAsync(newUser.Email);
             if (user is not null) return new GeneralResponse(false, "Email already exist!!!");
 
@@ -44,17 +45,36 @@ namespace FoodAPI.DataAccess.Repository
             if (!createUser.Succeeded) return new GeneralResponse(false, errorMessages);
 
             // Create Role if Role don't exist in db
-            var checkAdmin = await roleManager.FindByNameAsync(SD.Role_Admin);
+            var checkAdmin = await roleManager.FindByNameAsync(SD.RoleAdmin);
             if (checkAdmin is null)
             {
-                await roleManager.CreateAsync(new IdentityRole() { Name = SD.Role_Admin });
-                await roleManager.CreateAsync(new IdentityRole() { Name = SD.Role_DeliveryRider });
-                await roleManager.CreateAsync(new IdentityRole() { Name = SD.Role_IndividualSeller });
-                await roleManager.CreateAsync(new IdentityRole() { Name = SD.Role_RestaurantSeller });
-                await roleManager.CreateAsync(new IdentityRole() { Name = SD.Role_Customer });
+                await roleManager.CreateAsync(new IdentityRole() { Name = SD.RoleAdmin });
+                await roleManager.CreateAsync(new IdentityRole() { Name = SD.RoleDeliveryRider });
+                await roleManager.CreateAsync(new IdentityRole() { Name = SD.RoleIndividualSeller });
+                await roleManager.CreateAsync(new IdentityRole() { Name = SD.RoleRestaurantSeller });
+                await roleManager.CreateAsync(new IdentityRole() { Name = SD.RoleCustomer });
             }
             // Assign role user
             await userManager.AddToRoleAsync(newUser, userDTO.Role);
+
+            // Send Email id user is Seller
+            if (userDTO.Role is SD.RoleIndividualSeller or SD.RoleRestaurantSeller)
+            {
+                try
+                {
+                    var mailRequest = new MailRequest();
+                    EmailHtmlContent emailHtmlContent = new EmailHtmlContent();
+                    mailRequest.ToEmail = userDTO.Email;
+                    mailRequest.Subject = "Welcome to Yetai Food";
+                    mailRequest.Body = emailHtmlContent.AccountRegistrationResponse(userDTO.FullName.Split(" ")[0]);
+                    await emailService.SendEmailAsync(mailRequest);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+
             return new GeneralResponse(true, "Account Created");
 
         }
@@ -75,7 +95,7 @@ namespace FoodAPI.DataAccess.Repository
             var getUserRole = await userManager.GetRolesAsync(getUser);
             var userSession = new UserSessionDTO(getUser.Id, getUser.FullName, getUser.Email, getUserRole.First());
             string token = GenerateToken(userSession);
-            if (getUserRole.First() == SD.Role_Admin || getUserRole.First() == SD.Role_Customer)
+            if (getUserRole.First() == SD.RoleAdmin || getUserRole.First() == SD.RoleCustomer)
             {
                 return new LoginResponse(true, token!, "Login completed",getUser,null,getUserRole.First());
             }
