@@ -1,13 +1,14 @@
 import { useEffect, useState, useContext } from "react";
 import Card from "react-bootstrap/Card";
-import AddCategory from "./ModalCategory";
+import AddCategory, { Additems } from "./ModalCategory";
 import userLogin from "../context/UserLogin";
+import Delete from "./Delete";
 
 function Food() {
   const [nodata, setnodata] = useState(true);
   const [categorydata, setcategorydata] = useState(null);
   const { LoginToken, newdata } = useContext(userLogin);
-  
+
   const Requestoptions = {
     method: "GET",
     mode: "cors",
@@ -16,6 +17,8 @@ function Food() {
       Authorization: "Bearer " + LoginToken,
     },
   };
+
+
 
   useEffect(() => {
     fetch("https://localhost:7041/api/Category/", Requestoptions)
@@ -51,18 +54,8 @@ function Food() {
                 <Card.Body className="d-flex justify-content-between">
                   <h3>{category.categoryName}</h3>
                   <div>
-                    <span
-                      className="material-symbols-outlined mx-5"
-                      style={{ cursor: "pointer" }}
-                    >
-                      add
-                    </span>
-                    <span
-                      className="material-symbols-outlined pointer"
-                      style={{ cursor: "pointer" }}
-                    >
-                      delete
-                    </span>
+                    <Additems></Additems>
+                    <Delete category={category.categoryName} ></Delete>
                   </div>
                 </Card.Body>
                 <p
@@ -72,7 +65,7 @@ function Food() {
                   {category.categoryDescription}
                 </p>
                 <hr />
-                <div className="d-flex w-50 p-2 ">
+                {/* <div className="d-flex w-50 p-2 ">
                   <div className="card mx-3" style={{ width: "18 rem" }}>
                     <img src="..." className="card-img-top" alt="..." />
                     <div className="card-body">
@@ -91,7 +84,7 @@ function Food() {
                       </p>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </Card>
             ))
           )}
