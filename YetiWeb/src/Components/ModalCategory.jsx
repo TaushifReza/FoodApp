@@ -86,7 +86,7 @@ function AddCategory() {
   );
 }
 
-export function Additems() {
+export function Additems(props) {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -136,7 +136,7 @@ export function Additems() {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Add Food Items In {props.category} </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>

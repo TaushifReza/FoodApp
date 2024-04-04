@@ -54,8 +54,8 @@ function Food() {
                 <Card.Body className="d-flex justify-content-between">
                   <h3>{category.categoryName}</h3>
                   <div>
-                    <Additems></Additems>
-                    <Delete category={category.categoryName} ></Delete>
+                    <Additems category={category.categoryName}></Additems>
+                    <Delete category={category.categoryName}></Delete>
                   </div>
                 </Card.Body>
                 <p
