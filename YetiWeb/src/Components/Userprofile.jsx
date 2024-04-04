@@ -2,11 +2,10 @@ import "./ComponentCSS/Profile.css";
 import { useContext, useEffect, useState } from "react";
 import userLogin from "../context/UserLogin";
 
-
 function Userprofile() {
-
-  const {  Userdata, LoginToken,UserProfiledata} = useContext(userLogin);
-  
+  const { Userdata, LoginToken, UserProfiledata } = useContext(userLogin);
+  const [edit, setedit] = useState(false);
+  const [editRes, seteditRes] = useState(false);
 
   return (
     <>
@@ -69,7 +68,7 @@ function Userprofile() {
                         stroke="currentColor"
                         strokeWidth="2"
                         strokeLinecap="round"
-                        strokeLlinejoin="round"
+                        strokeLinejoin="round"
                         className="feather feather-twitter mr-2 icon-inline text-info"
                       >
                         <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
@@ -139,102 +138,231 @@ function Userprofile() {
               </div>
             </div>
             <div className="col-md-8">
-              <div className="card mb-3">
-                <div className="card-body">
-                  <div className="row">
-                    <div className="col-sm-3">
-                      <h6 className="mb-0">Full Name</h6>
-                    </div>
-                    <div
-                      className="col-sm-9 text-secondary"
-                      style={{ textTransform: "capitalize" }}
-                    >
-                      {Userdata.fullName}
-                    </div>
-                  </div>
-                  <hr />
-                  <div className="row">
-                    <div className="col-sm-3">
-                      <h6 className="mb-0">Email</h6>
-                    </div>
-                    <div className="col-sm-9 text-secondary">
-                      {Userdata.email}
-                    </div>
-                  </div>
-                  <hr />
-                  <div className="row">
-                    <div className="col-sm-3">
-                      <h6 className="mb-0">Phone</h6>
-                    </div>
-                    <div className="col-sm-9 text-secondary">
-                      {Userdata.phoneNumber}
-                    </div>
-                  </div>
-                  <hr />
-                  <div className="row">
-                    <div className="col-sm-3">
-                      <h6 className="mb-0">Address</h6>
-                    </div>
-                    <div
-                      className="col-sm-9 text-secondary"
-                      style={{ textTransform: "capitalize" }}
-                    >
-                      {Userdata.address}
-                    </div>
-                  </div>
-                  <hr />
-                  <div className="row">
-                    <div className="col-sm-12">
-                      <a
-                        className="btn btn-info "
-                        target="__blank"
-                        href="https://www.bootdey.com/snippets/view/profile-edit-data-and-skills"
+              {!edit ? (
+                <div className="card mb-3">
+                  <div className="card-body">
+                    <div className="row">
+                      <div className="col-sm-3">
+                        <h6 className="mb-0">Full Name</h6>
+                      </div>
+                      <div
+                        className="col-sm-9 text-secondary"
+                        style={{ textTransform: "capitalize" }}
                       >
-                        Edit
-                      </a>
+                        {Userdata.fullName}
+                      </div>
+                    </div>
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-3">
+                        <h6 className="mb-0">Email</h6>
+                      </div>
+                      <div className="col-sm-9 text-secondary">
+                        {Userdata.email}
+                      </div>
+                    </div>
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-3">
+                        <h6 className="mb-0">Phone</h6>
+                      </div>
+                      <div className="col-sm-9 text-secondary">
+                        {Userdata.phoneNumber}
+                      </div>
+                    </div>
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-3">
+                        <h6 className="mb-0">Address</h6>
+                      </div>
+                      <div
+                        className="col-sm-9 text-secondary"
+                        style={{ textTransform: "capitalize" }}
+                      >
+                        {Userdata.address}
+                      </div>
+                    </div>
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-12">
+                        <a
+                          className="btn btn-info "
+                          onClick={() => setedit(true)}
+                        >
+                          Edit
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div className="card mb-3">
+                  <div className="card-body">
+                    <div className="row">
+                      <div className="col-sm-3">
+                        <h6 className="mb-0">Full Name</h6>
+                      </div>
+                      <div
+                        className="col-sm-9 text-secondary"
+                        style={{ textTransform: "capitalize" }}
+                      >
+                        <input
+                          type="text"
+                          class="form-control"
+                          value={Userdata.fullName}
+                        ></input>
+                      </div>
+                    </div>
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-3">
+                        <h6 className="mb-0">Email</h6>
+                      </div>
+                      <div className="col-sm-9 text-secondary">
+                        <input
+                          type="email"
+                          class="form-control"
+                          value={Userdata.email}
+                        ></input>
+                      </div>
+                    </div>
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-3">
+                        <h6 className="mb-0">Phone</h6>
+                      </div>
+                      <div className="col-sm-9 text-secondary">
+                        <input
+                          type="number"
+                          class="form-control"
+                          value={Userdata.phoneNumber}
+                        ></input>
+                      </div>
+                    </div>
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-3">
+                        <h6 className="mb-0">Address</h6>
+                      </div>
+                      <div
+                        className="col-sm-9 text-secondary"
+                        style={{ textTransform: "capitalize" }}
+                      >
+                        <input
+                          type="text"
+                          class="form-control"
+                          value={Userdata.address}
+                        ></input>
+                      </div>
+                    </div>
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-12">
+                        <a
+                          className="btn btn-info "
+                          onClick={() => setedit(false)}
+                        >
+                          Save Changes
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
 
-              <div className="card mb-3">
-                <div className="card-body">
-                  <h2 style={{ textAlign: "center", marginBottom: "1em" }}>
-                    Kitchen/Restaurant
-                  </h2>
-                  <div className="row">
-                    <div className="col-sm-3">
-                      <h6 className="mb-0">Full Name</h6>
+              {!editRes ? (
+                <div className="card mb-3">
+                  <div className="card-body">
+                    <h2 style={{ textAlign: "center", marginBottom: "1em" }}>
+                      Kitchen/Restaurant
+                    </h2>
+                    <div className="row">
+                      <div className="col-sm-3">
+                        <h6 className="mb-0">Full Name</h6>
+                      </div>
+                      <div
+                        className="col-sm-9 text-secondary"
+                        style={{ textTransform: "capitalize" }}
+                      >
+                        {UserProfiledata.name}
+                      </div>
                     </div>
-                    <div
-                      className="col-sm-9 text-secondary"
-                      style={{ textTransform: "capitalize" }}
-                    >
-                      {UserProfiledata.name}
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-3">
+                        <h6 className="mb-0">Address</h6>
+                      </div>
+                      <div
+                        className="col-sm-9 text-secondary"
+                        style={{ textTransform: "capitalize" }}
+                      >
+                        {UserProfiledata.address}
+                      </div>
                     </div>
-                  </div>
-                  <hr />
-                  <div className="row">
-                    <div className="col-sm-3">
-                      <h6 className="mb-0">Address</h6>
-                    </div>
-                    <div
-                      className="col-sm-9 text-secondary"
-                      style={{ textTransform: "capitalize" }}
-                    >
-                      {UserProfiledata.address}
-                    </div>
-                  </div>
-                  <hr />
-                  <div className="row">
-                    <div className="col-sm-12">
-                      <a className="btn btn-info " target="__blank">
-                        Edit
-                      </a>
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-12">
+                        <a
+                          className="btn btn-info "
+                          onClick={() => seteditRes(true)}
+                        >
+                          Edit
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div className="card mb-3">
+                  <div className="card-body">
+                    <h2 style={{ textAlign: "center", marginBottom: "1em" }}>
+                      Kitchen/Restaurant
+                    </h2>
+                    <div className="row">
+                      <div className="col-sm-3">
+                        <h6 className="mb-0">Full Name</h6>
+                      </div>
+                      <div
+                        className="col-sm-9 text-secondary"
+                        style={{ textTransform: "capitalize" }}
+                      >
+                        <input
+                          type="text"
+                          class="form-control"
+                          value={UserProfiledata.name}
+                        ></input>
+                      </div>
+                    </div>
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-3">
+                        <h6 className="mb-0">Address</h6>
+                      </div>
+                      <div
+                        className="col-sm-9 text-secondary"
+                        style={{ textTransform: "capitalize" }}
+                      >
+                        <input
+                          type="text"
+                          class="form-control"
+                          value={UserProfiledata.address}
+                        ></input>
+                      </div>
+                    </div>
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-12">
+                        <a
+                          className="btn btn-info"
+                          onClick={() => seteditRes(false)}
+                        >
+                          Save Changes
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
