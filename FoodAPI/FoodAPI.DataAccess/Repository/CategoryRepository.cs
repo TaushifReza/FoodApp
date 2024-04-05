@@ -12,5 +12,13 @@ namespace FoodAPI.DataAccess.Repository
         {
             _db = db;
         }
+
+        public async Task<Category> UpdateAsync(Category entity)
+        {
+            entity.UpdatedDate = DateTime.Now;
+            _db.Category.Update(entity);
+            await _db.SaveChangesAsync();
+            return entity;
+        }
     }
 }

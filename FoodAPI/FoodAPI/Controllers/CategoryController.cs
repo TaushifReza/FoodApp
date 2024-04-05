@@ -144,12 +144,38 @@ namespace FoodAPI.Controllers
                 _response.IsSuccess = true;
                 return Ok(_response);
             }
-            catch (Exception re)
+            catch (Exception e)
             {
-                Console.WriteLine(re);
-                throw;
+                _response.ErrorMessage = new List<string?>() { e.ToString() };
             }
 
+            return _response;
+        }
+
+        [HttpPut("{id:int}", Name = "UpdateCategory")]
+        [Authorize(Roles = $"{SD.RoleIndividualSeller}, {SD.RoleRestaurantSeller}")]
+        public async Task<ActionResult<APIResponse>> UpdateCategory(int id, [FromBody] CategoryUpdateDTO updateDto)
+        {
+            try
+            {
+                if (updateDto == null || id != updateDto.Id)
+                {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.IsSuccess = false;
+                    _response.ErrorMessage = new List<string?> { "Id is not equal to DTO id or DTO is null" };
+                    return BadRequest(_response);
+                }
+
+                Category category = _mapper.Map<Category>(updateDto);
+                await _dbCategory.UpdateAsync(category);
+                _response.StatusCode = HttpStatusCode.NoContent;
+                _response.IsSuccess = true;
+                return Ok(_response);
+            }
+            catch (Exception e)
+            {
+                _response.ErrorMessage = new List<string?>() { e.ToString() };
+            }
             return _response;
         }
     }

@@ -15,6 +15,7 @@ namespace FoodAPI.Models.Models.Dto
         [Required]
         public double FoodPrice { get; set; }
         public string? ImageUrl { get; set; }
+        [Required]
         public int CategoryId { get; set; }
         public int? SellerProfileId { get; set; }
     }
