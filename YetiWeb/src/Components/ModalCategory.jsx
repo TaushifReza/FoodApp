@@ -8,7 +8,8 @@ function AddCategory() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const { LoginToken, setnewdata } = useContext(userLogin);
+  const { LoginToken, setCategorynewdata } =
+    useContext(userLogin);
   const [CategoryName, setCategoryName] = useState("");
   const [Description, setDescription] = useState("");
 
@@ -32,7 +33,7 @@ function AddCategory() {
     );
     const jasonData = await Fetch.json();
     if (jasonData.isSuccess == true) {
-      setnewdata((newdata) => !newdata);
+      setCategorynewdata((newdata) => !newdata);
     }
 
     handleClose();
@@ -90,7 +91,7 @@ export function Additems(props) {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const { LoginToken } = useContext(userLogin);
+  const { LoginToken, setitemnewdata } = useContext(userLogin);
   const [foodname, setfoodname] = useState(null);
   const [foodDescrption, setfoodDescription] = useState(null);
   const [foodprice, setfoodprice] = useState(null);
@@ -98,10 +99,11 @@ export function Additems(props) {
 
   async function AddItem() {
     const formData = new FormData();
-    formData.append('FoodName', foodname.trim());
+    formData.append("FoodName", foodname.trim());
     formData.append("FoodDescription", foodDescrption.trim());
     formData.append("FoodPrice", foodprice);
     formData.append("FoodImage", foodimg);
+    formData.append("CategoryId", props.id);
 
     const Requestoptions = {
       method: "POST",
@@ -116,18 +118,16 @@ export function Additems(props) {
       Requestoptions
     );
     const jasonData = await Fetch.json();
-    console.log(jasonData);
     if (jasonData.isSuccess == true) {
-      console.log(jasonData);
+      setitemnewdata((newdata) => !newdata);
     }
-
     handleClose();
   }
 
   return (
     <>
       <span
-        className="material-symbols-outlined mx-5"
+        className="material-symbols-outlined mx-3"
         style={{ cursor: "pointer" }}
         onClick={handleShow}
       >

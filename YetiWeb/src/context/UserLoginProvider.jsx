@@ -6,13 +6,28 @@ const UserLoginProvider = ({children})=>{
     const [Userdata, setUserdata] = useState(null);
     const [LoginToken, setLoginToken]= useState(null);
     const [UserProfiledata, setUserProfiledata] = useState(null);
-    const [newdata, setnewdata] = useState(false);
-    return(
-        <userLogin.Provider value={{loggedin,setloggedin,Userdata, setUserdata, LoginToken,
-        setLoginToken, UserProfiledata,setUserProfiledata, newdata, setnewdata}}>
-           {children} 
-        </userLogin.Provider>
-    )
+    const [Categorynewdata, setCategorynewdata] = useState(false);
+     const [itemnewdata, setitemnewdata] = useState(false);
+    return (
+      <userLogin.Provider
+        value={{
+          loggedin,
+          setloggedin,
+          Userdata,
+          setUserdata,
+          LoginToken,
+          setLoginToken,
+          UserProfiledata,
+          setUserProfiledata,
+          Categorynewdata,
+          setCategorynewdata,
+          itemnewdata,
+          setitemnewdata,
+        }}
+      >
+        {children}
+      </userLogin.Provider>
+    );
 }
 
 export default UserLoginProvider;
