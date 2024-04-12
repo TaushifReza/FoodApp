@@ -4,6 +4,7 @@ using FoodAPI.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodAPI.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240408155146_AddAutoGenerateShoopingcartId")]
+    partial class AddAutoGenerateShoopingcartId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -167,92 +170,6 @@ namespace FoodAPI.DataAccess.Migrations
                     b.HasIndex("SellerProfileId");
 
                     b.ToTable("FoodItems");
-                });
-
-            modelBuilder.Entity("FoodAPI.Models.Models.OrderDetail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FoodItemId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrderHeaderId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FoodItemId");
-
-                    b.HasIndex("OrderHeaderId");
-
-                    b.ToTable("OrderDetails");
-                });
-
-            modelBuilder.Entity("FoodAPI.Models.Models.OrderHeader", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ApplicationUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Carrier")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("OrderStatus")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("OrderTotal")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("PaymentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("PaymentIntentId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentStatus")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SessionId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ShippingDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("TrackingNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.ToTable("OrderHeaders");
                 });
 
             modelBuilder.Entity("FoodAPI.Models.Models.SellerProfile", b =>
@@ -470,36 +387,6 @@ namespace FoodAPI.DataAccess.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("SellerProfile");
-                });
-
-            modelBuilder.Entity("FoodAPI.Models.Models.OrderDetail", b =>
-                {
-                    b.HasOne("FoodAPI.Models.Models.FoodItem", "FoodItem")
-                        .WithMany()
-                        .HasForeignKey("FoodItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FoodAPI.Models.Models.OrderHeader", "OrderHeader")
-                        .WithMany()
-                        .HasForeignKey("OrderHeaderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("FoodItem");
-
-                    b.Navigation("OrderHeader");
-                });
-
-            modelBuilder.Entity("FoodAPI.Models.Models.OrderHeader", b =>
-                {
-                    b.HasOne("FoodAPI.Models.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
                 });
 
             modelBuilder.Entity("FoodAPI.Models.Models.SellerProfile", b =>

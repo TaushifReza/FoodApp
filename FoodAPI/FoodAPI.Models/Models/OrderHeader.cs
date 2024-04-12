@@ -8,13 +8,19 @@ namespace FoodAPI.Models.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+
         [ForeignKey("ApplicationUser")]
         public string ApplicationUserId { get; set; }
-        public ApplicationUser ApplicationUser { get; set; }
+        public ApplicationUser? ApplicationUser { get; set; }
 
         public DateTime OrderDate { get; set; }
         public DateTime ShippingDate { get; set; }
-        public double OrderTotal { get; set; }
+        public double? OrderTotal { get; set; }
+
+        public string? OrderStatus { get; set; }
+        public string? PaymentStatus { get; set; }
+        public string? TrackingNumber { get; set; }
+        public string? Carrier { get; set; }
 
         public DateTime PaymentDate { get; set; }
 

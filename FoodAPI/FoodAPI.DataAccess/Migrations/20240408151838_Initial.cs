@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FoodAPI.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class AddTables : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -225,13 +225,40 @@ namespace FoodAPI.DataAccess.Migrations
                         column: x => x.CategoryId,
                         principalTable: "Category",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_FoodItems_SellerProfiles_SellerProfileId",
                         column: x => x.SellerProfileId,
                         principalTable: "SellerProfiles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShoppingCarts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FoodItemId = table.Column<int>(type: "int", nullable: false),
+                    Count = table.Column<int>(type: "int", nullable: false),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShoppingCarts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ShoppingCarts_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ShoppingCarts_FoodItems_FoodItemId",
+                        column: x => x.FoodItemId,
+                        principalTable: "FoodItems",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -292,6 +319,16 @@ namespace FoodAPI.DataAccess.Migrations
                 name: "IX_SellerProfiles_ApplicationUserId",
                 table: "SellerProfiles",
                 column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShoppingCarts_ApplicationUserId",
+                table: "ShoppingCarts",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShoppingCarts_FoodItemId",
+                table: "ShoppingCarts",
+                column: "FoodItemId");
         }
 
         /// <inheritdoc />
@@ -313,10 +350,13 @@ namespace FoodAPI.DataAccess.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "FoodItems");
+                name: "ShoppingCarts");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "FoodItems");
 
             migrationBuilder.DropTable(
                 name: "Category");

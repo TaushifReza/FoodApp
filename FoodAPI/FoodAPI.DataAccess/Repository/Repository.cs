@@ -55,6 +55,12 @@ namespace FoodAPI.DataAccess.Repository
             await SaveAsync();
         }
 
+        public async Task RemoveRangeAsync(IEnumerable<T> entity)
+        {
+            dbSet.RemoveRange(entity);
+            await SaveAsync();
+        }
+
         public async Task SaveAsync()
         {
             await _db.SaveChangesAsync();

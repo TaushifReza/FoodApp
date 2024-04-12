@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Stripe;
 using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,11 +28,15 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 builder.Services.Configure<EmailSetting>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
 builder.Services.AddScoped<IEmailService,  EmailService>();
 builder.Services.AddScoped<ISellerProfileRepository, SellerProfileRepository>();
 builder.Services.AddScoped<ICategoryRepository,  CategoryRepository>();
 builder.Services.AddScoped<IFoodItemRepository, FoodItemRepository>();
 builder.Services.AddScoped<IPhotoManager, PhotoManager>();
+builder.Services.AddScoped<IShoppingCartRepository,  ShoppingCartRepository>();
+builder.Services.AddScoped<IOrderHeaderRepository, OrderHeaderRepository>();
+builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 //Add Identity & JWT authentication
 //Identity
@@ -104,7 +109,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 app.UseAuthentication();
 app.UseAuthorization();
 

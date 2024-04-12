@@ -16,5 +16,8 @@ namespace FoodAPI.DataAccess.Data
         public DbSet<SellerProfile> SellerProfiles { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<FoodItem> FoodItems { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+        public DbSet<OrderHeader> OrderHeaders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
     }
 }

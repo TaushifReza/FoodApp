@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodAPI.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240329190030_AddTables")]
-    partial class AddTables
+    [Migration("20240408151838_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -199,6 +199,33 @@ namespace FoodAPI.DataAccess.Migrations
                     b.ToTable("SellerProfiles");
                 });
 
+            modelBuilder.Entity("FoodAPI.Models.Models.ShoppingCart", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FoodItemId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("FoodItemId");
+
+                    b.ToTable("ShoppingCarts");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -371,6 +398,25 @@ namespace FoodAPI.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("ApplicationUser");
+                });
+
+            modelBuilder.Entity("FoodAPI.Models.Models.ShoppingCart", b =>
+                {
+                    b.HasOne("FoodAPI.Models.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FoodAPI.Models.Models.FoodItem", "FoodItem")
+                        .WithMany()
+                        .HasForeignKey("FoodItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("FoodItem");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -15,6 +15,9 @@ namespace FoodAPI
             CreateMap<Category, CategoryUpdateDTO>().ReverseMap();
             CreateMap<FoodItem, FoodItemDTO>().ReverseMap();
             CreateMap<FoodItem, FoodItemCreateDTO>().ReverseMap();
+            CreateMap<ShoppingCart, ShoppingCartDTO>().ReverseMap();
+            CreateMap<ShoppingCart, ShoppingCartAddDTO>().ReverseMap();
+            CreateMap<OrderHeader, OrderHeaderCreateDTO>().ReverseMap();
         }
     }
 }
