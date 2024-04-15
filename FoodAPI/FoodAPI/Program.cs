@@ -89,14 +89,6 @@ builder.Services.AddCors(options =>
         policyBuilder.AllowAnyMethod();
         policyBuilder.AllowCredentials();
     });
-    // React Native App
-    options.AddPolicy("reactNativeApp", policyBuilder =>
-    {
-        policyBuilder.WithOrigins("exp://100.64.221.65:8081", "http://100.64.221.65:8081", "http://localhost:8081");
-        policyBuilder.AllowAnyHeader();
-        policyBuilder.AllowAnyHeader();
-        policyBuilder.AllowCredentials();
-    });
 });
 
 var app = builder.Build();
@@ -116,7 +108,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseCors("reactApp");
-app.UseCors("reactNativeApp");
 
 app.Run();
 
