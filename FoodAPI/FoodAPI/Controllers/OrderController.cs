@@ -121,8 +121,7 @@ namespace FoodAPI.Controllers
             return _response;
         }
 
-        [HttpPost("OrderConfirmation")]
-        [Authorize(Roles = SD.RoleCustomer)]
+        [HttpGet("OrderConfirmation")]
         public async Task<ActionResult<APIResponse>> OrderConfirmation(int id)
         {
             try
