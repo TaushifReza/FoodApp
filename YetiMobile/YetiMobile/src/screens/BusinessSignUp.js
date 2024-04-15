@@ -14,12 +14,15 @@ const BusinessSignUp = () => {
 
   const handleSignUp = () => {
     const signUpType = {
-      username,
+      fullName,
       email,
       password,
+      confirmPassword,
+      address,
       phoneNumber,
+      role: "Customer",
     };
-    axios.post(`${BaseUrl}Auth/register?signUpType=BusinessSignUp`, signUpType)
+    axios.post(`${BaseUrl}User/register?signUpType=BusinessSignUp`, signUpType)
       .then(response => {
         // Handle success response
         console.log('Signup successful:', response.data);

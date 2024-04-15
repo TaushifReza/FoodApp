@@ -92,7 +92,7 @@ builder.Services.AddCors(options =>
     // React Native App
     options.AddPolicy("reactNativeApp", policyBuilder =>
     {
-        policyBuilder.WithOrigins("");
+        policyBuilder.WithOrigins("exp://100.64.221.65:8081", "http://100.64.221.65:8081", "http://localhost:8081");
         policyBuilder.AllowAnyHeader();
         policyBuilder.AllowAnyHeader();
         policyBuilder.AllowCredentials();

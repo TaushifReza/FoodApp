@@ -7,7 +7,7 @@ namespace FoodAPI.Controllers
 {
     [Route("api/User")]
     [ApiController]
-    public class UserAccountController(IUserAccount userAccount) : ControllerBase
+    public class UserAccountController(IUserAccount userAccount, ILogger<UserAccountController> logger) : ControllerBase
     {
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserDTO userDTO)

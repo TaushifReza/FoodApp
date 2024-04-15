@@ -1,25 +1,30 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
-import { UserIcon, EnvelopeIcon, LockClosedIcon, PhoneIcon } from "react-native-heroicons/outline";
+import { UserIcon, EnvelopeIcon, LockClosedIcon, PhoneIcon, MapPinIcon } from "react-native-heroicons/outline";
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import { BaseUrl } from '../../Database/BaseUrl';
 
 const BuyerSignUp = () => {
   const navigation = useNavigation();
-  const [username, setUsername] = useState('');
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [address, setAddress] = useState('');
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     const signUpType = {
-      username,
+      fullName,
       email,
       password,
-      phoneNumber
+      confirmPassword: password,
+      address,
+      phoneNumber,
+      role: "Customer",
     };
-    axios.post(`${BaseUrl}Auth/register?signUpType=BuyerSignUp`, signUpType)
+
+    axios.post(`${BaseUrl}User/register`, signUpType)
       .then(response => {
         // Handle success response
         console.log('Signup successful:', response.data);
@@ -45,8 +50,8 @@ const BuyerSignUp = () => {
         {/* This Is the View for UserName form*/}
         <View className='bg-white w-[80%] h-12 rounded-[20px] mt-16 ml-10 flex-row items-center '>
         <UserIcon strokeWidth={2} size={30} color={'black'} style={{marginLeft:7}}/>
-        <TextInput className='pl-1 w-[83%] h-7' placeholder='Enter Your UserName' value={username}
-        onChangeText={setUsername}/>
+        <TextInput className='pl-1 w-[83%] h-7' placeholder='Enter Your UserName' value={fullName}
+        onChangeText={setFullName}/>
         </View>
   
         {/* This Is the View for Gmail form*/}
@@ -68,6 +73,13 @@ const BuyerSignUp = () => {
         <PhoneIcon strokeWidth={2} size={30} color={'black'} style={{marginLeft:7}}/>
         <TextInput className='pl-1 w-[83%] h-7' placeholder='Enter Your PhoneNumber' value={phoneNumber}
         onChangeText={setPhoneNumber}/>
+        </View>
+
+        {/* This Is the View for Phone Number form*/}
+        <View className='bg-white w-[80%] h-12 rounded-[20px] mt-8 ml-10 flex-row items-center'>
+        <MapPinIcon strokeWidth={2} size={30} color={'black'} style={{marginLeft:7}}/>
+        <TextInput className='pl-1 w-[83%] h-7' placeholder='Enter Your Address' value={address}
+        onChangeText={setAddress}/>
         </View>
         
         <TouchableOpacity onPress={handleSignUp} className='bg-white mt-24 w-60 mx-20 h-12 rounded-2xl flex justify-center items-center'>
