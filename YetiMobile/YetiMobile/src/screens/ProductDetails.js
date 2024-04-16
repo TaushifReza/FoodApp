@@ -1,65 +1,166 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
-import {StarIcon,BackspaceIcon} from 'react-native-heroicons/solid'
-import {ClockIcon,PlusCircleIcon,MinusCircleIcon,} from 'react-native-heroicons/outline'
-import { useNavigation } from '@react-navigation/native';
-import MoreItems from '../components/MoreItems';
-import { cart } from '../../Database/CartItems';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  FlatList,
+  Alert,
+} from "react-native";
+import React, { useState, useEffect, useContext } from "react";
+import {
+  StarIcon,
+  BackspaceIcon,
+  PlusIcon,
+  ShoppingCartIcon,
+} from "react-native-heroicons/solid";
+import {
+  ClockIcon,
+  PlusCircleIcon,
+  MinusCircleIcon,
+} from "react-native-heroicons/outline";
+import { useNavigation } from "@react-navigation/native";
+import MoreItems from "../components/MoreItems";
+import { cart } from "../../Database/CartItems";
+import { BaseUrl } from "../../Database/BaseUrl";
+import axios from "axios";
+import { AuthContext } from "../context/AuthContext";
 
+const ProductDetails = ({ route }) => {
+  const navigation = useNavigation();
+  const { id } = route.params || {};
+  const [foodItem, setFoodItem] = useState([]);
+  const [fetchError, setFetchError] = useState(null);
+  const { authData } = useContext(AuthContext);
 
-const ProductDetails = ({route}) => {
-    const navigation = useNavigation()
-    const {product}=route.params
+  useEffect(() => {
+    if (id) {
+      const fetchFoodItem = async () => {
+        try {
+          const response = await axios.get(
+            `${BaseUrl}FoodItem/GetAllFoodItem?id=${id}`
+          );
+          console.log("Response data:", response.data);
 
-    const handleAddToCart =()=>{
-      cart.push(product)
+          if (response.data.isSuccess) {
+            setFoodItem(response.data.result);
+            setFetchError(null);
+          } else {
+            setFetchError(
+              "Error fetching food item: " + response.data.errorMessage
+            );
+          }
+        } catch (error) {
+          setFetchError("Error fetching food item: " + error.message);
+        }
+      };
+      fetchFoodItem();
     }
+  }, [id]);
+
+  const addTocart = async (id) => {
+    const cart = {
+      FoodItemId: id,
+      Count: 1,
+    };
+    console.log(cart);
+    console.log(authData.token);
+
+    try {
+      const response = await axios.post(`${BaseUrl}ShoppingCart`, cart, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authData.token}`,
+        },
+      });
+      console.log(response.data);
+      if (response.data.isSuccess === true) {
+        Alert.alert("Success", "Food added to cart.");
+      } else {
+        Alert.alert("Error", "Something went wrong. Try Again!!!");
+      }
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    }
+  };
+
   return (
-    <View className='absolute'>
-    <View>
-    <Image source={{uri:product.image}} className='rounded-b-3xl' style={{height:340,width:415}}/>
-    </View>
-    <View style={{width:'90%'}} className='bg-gray-200 relative left-5 bottom-9 h-48 rounded-3xl'>
-    <View className='items-center'>
-    <Image source={{ uri: product.seller.StoreProfile }} className='rounded-full mt-2' style={{height:70,width:70}}/>
-    <Text className='font-bold text-xl'>{product.seller.businessName}</Text>
-    </View>
-    <View className='ml-7 mt-2 flex-row items-center'>
-    <Text className='text-lg mr-2'>Rating</Text>
-    <StarIcon color={'yellow'} stroke={'black'}/>
-    <Text className='ml-2 text-lg'>{product.seller.storeRating}</Text>
-    </View>
-    <View className='ml-7 mt-2 flex-row items-center'>
-    <ClockIcon/>
-    <Text className='text-lg ml-2'>{product.time}</Text>
-    </View>
-    </View>
+    <View className="flex-1 absolute w-full h-full">
+      <View>
+        <Image
+          source={require("../../assets/images/4.jpg")}
+          className="rounded-b-3xl"
+          style={{ height: 240, width: "100%" }}
+        />
+      </View>
 
-    <TouchableOpacity onPress={()=>{navigation.goBack()}} style={{bottom:'49%',position:'relative', marginLeft:10}}>
-    <BackspaceIcon strokeWidth={3} size={30} color={'red'} />
-    </TouchableOpacity>
+      {fetchError ? (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Text style={{ color: "red" }}>{fetchError}</Text>
+        </View>
+      ) : (
+        <FlatList
+          className=""
+          data={foodItem}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <RenderAllFoodItem item={item} addTocart={addTocart} />
+          )}
+          ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+        />
+      )}
 
-    <Text className='bottom-12 ml-6 font-semibold text-xl text-yellow-400'>{product.itemName}</Text>
-    
-    <View className='ml-7 mt-2 flex-row items-center bottom-12'>
-    <Text className='text-lg mr-2'>Rating</Text>
-    <StarIcon color={'yellow'} stroke={'black'}/>
-    <Text className=' ml-2 text-lg'>{product.itemRating}</Text>
-    <Text className='ml-44 text-lg text-red-600'>Rs.{product.price}</Text>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("Cart");
+        }}
+        style={{
+          bottom: 0,
+          right: 0,
+          position: "fixed",
+          marginLeft: 10,
+          width: "10%",
+        }}
+        className="bg-blue-200 rounded-full items-center p-2"
+      >
+        <ShoppingCartIcon size={30} color={"green"} />
+      </TouchableOpacity>
     </View>
-    <View className='flex-row justify-evenly bottom-2'>
-    <TouchableOpacity onPress={handleAddToCart} style={{borderColor:'yellow'}} className='bg-yellow-400 rounded-2xl h-12 w-80'>
-    <Text className='text-xl font-medium text-white text-center pt-2'>Add to Cart</Text>
-    </TouchableOpacity>
-    </View>
-    <Text className='text-center text-base top-2'>
-    More from {product.seller.businessName}
-    </Text>
-    <View className='top-7'>
-    <MoreItems/>
-    </View>
-    </View>
-  )
-}
+  );
+};
 
-export default ProductDetails
+const RenderAllFoodItem = ({ item, index, addTocart }) => {
+  return (
+    <View className="flex-row items-center bg-blue-200 rounded-3xl w-11/12 mx-auto">
+      <View className="mr-4">
+        <Image
+          className="rounded-3xl"
+          source={{ uri: item.imageUrl }} // Assuming you have an 'image' property in the seller profile
+          style={{ height: 120, width: 130 }}
+        />
+      </View>
+      <View className="gap-y-2">
+        <View>
+          <Text className="text-xl font-bold">{item.foodName}</Text>
+        </View>
+        <View className="flex-row justify-between w-56 items-center ">
+          <View>
+            <Text>Rs. {item.foodPrice}</Text>
+          </View>
+          <View>
+            <TouchableOpacity
+              className="p-2 bg-red-300 rounded-xl"
+              onPress={() => {
+                addTocart(item.id);
+              }}
+            >
+              <Text>Add To Cart</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+};
+export default ProductDetails;

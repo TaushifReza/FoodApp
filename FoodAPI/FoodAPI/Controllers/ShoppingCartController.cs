@@ -58,7 +58,7 @@ namespace FoodAPI.Controllers
 
         [HttpPost(Name = "AddToCart")]
         [Authorize(Roles = SD.RoleCustomer)]
-        public async Task<ActionResult<APIResponse>> AddToCart([FromForm] ShoppingCartAddDTO cartAddDto)
+        public async Task<ActionResult<APIResponse>> AddToCart([FromBody] ShoppingCartAddDTO cartAddDto)
         {
             try
             {

@@ -93,5 +93,25 @@ namespace FoodAPI.Controllers
             }
             return _response;
         }
+
+        // Mobile API
+        [HttpGet]
+        public async Task<ActionResult<APIResponse>> GetAllSellerProfile()
+        {
+            try
+            {
+                var sellerProfile = await _dbSellerProfile.GetAllAsync();
+
+                _response.Result = _mapper.Map<List<SellerProfileDTO>>(sellerProfile);
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                return Ok(_response);
+            }
+            catch (Exception e)
+            {
+                _response.ErrorMessage = new List<string?>() { e.ToString() };
+            }
+            return _response;
+        }
     }
 }

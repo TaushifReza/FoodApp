@@ -7,7 +7,7 @@ import {
   Alert,
 } from "react-native";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   UserIcon,
   LockClosedIcon,
@@ -16,55 +16,52 @@ import {
 
 import { useNavigation } from "@react-navigation/native";
 import { BaseUrl } from "../../Database/BaseUrl";
+import { AuthContext } from "../context/AuthContext";
 
 const LogIn = () => {
   const navigation = useNavigation();
+  const { setAuthInfo } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
-    const loginData = {
-      email,
-      password,
+    let loginData = {
+      email: email.trim(),
+      password: password.trim(),
     };
 
     try {
-    
       const response = await axios.post(`${BaseUrl}User/login`, loginData);
-      console.log("Login successful:", response.data);
-      if(response.data.role === 'Customer' ){
+      if (response.data.isSuccess === true) {
+        if (response.data.role === "Customer") {
+          const response_data = {
+            token: response.data.token,
+            role: response.data.role,
+            email: response.data.user.email,
+            fullName: response.data.user.fullName,
+            phoneNumber: response.data.user.phoneNumber,
+            address: response.data.user.address,
+          };
 
-      }
-      else if(response.data.role === 'Delivery Rider'){
+          // Save the response_data to the AuthContext
+          setAuthInfo(response_data);
 
-
-      }
-      else {
-        Alert.alert(
-              "Error",
-              "You are not eligible to login. Try in website."
-            );
-        
+          navigation.navigate("HomeScreen");
+        } else if (response.data.role === "Delivery Rider") {
+          //
+        } else {
+          Alert.alert(
+            "Error",
+            "You are not eligible to login. Try in website."
+          );
+        }
+      } else {
+        Alert.alert("Error", "Invalid email and password!!!");
       }
     } catch (error) {
       console.error("Login error:", error.response.data);
+      Alert.alert("Error", "Something happend try again!!!");
     }
-
-    // axios
-    //   .post(`${BaseUrl}Auth/login`, loginData)
-    //   .then((response) => {
-    //     // Handle successful login
-    //     console.log("Login successful:", response.data);
-    //     navigation.navigate("HomeScreen");
-    //   })
-    //   .catch((error) => {
-    //     // Handle login failure
-    //     console.error("Login error:", error);
-    //     Alert.alert(
-    //       "Error",
-    //       "Invalid username/email or password. Please try again."
-    //     );
-    //   });
   };
 
   return (

@@ -189,5 +189,26 @@ namespace FoodAPI.Controllers
             }
             return _response;
         }
+
+        [HttpGet("GetAllFoodItem")]
+        public async Task<ActionResult<APIResponse>> GetAllFoodItem(int id)
+        {
+            try
+            {
+                var foodItem = await _dbFoodItem.GetAllAsync(u => u.SellerProfileId == id);
+
+                _response.Result = _mapper.Map<List<FoodItemDTO>>(foodItem);
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                return Ok(_response);
+            }
+            catch (Exception e)
+            {
+                _response.StatusCode = HttpStatusCode.InternalServerError;
+                _response.IsSuccess = false;
+                _response.ErrorMessage = new List<string?>() { e.ToString() };
+            }
+            return _response;
+        }
     }
 }
