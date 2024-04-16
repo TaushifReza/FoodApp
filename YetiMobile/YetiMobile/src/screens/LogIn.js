@@ -29,8 +29,23 @@ const LogIn = () => {
     };
 
     try {
+    
       const response = await axios.post(`${BaseUrl}User/login`, loginData);
       console.log("Login successful:", response.data);
+      if(response.data.role === 'Customer' ){
+
+      }
+      else if(response.data.role === 'Delivery Rider'){
+
+
+      }
+      else {
+        Alert.alert(
+              "Error",
+              "You are not eligible to login. Try in website."
+            );
+        
+      }
     } catch (error) {
       console.error("Login error:", error.response.data);
     }
@@ -99,7 +114,7 @@ const LogIn = () => {
           />
           <TextInput
             onChangeText={setEmail}
-            placeholder="Enter Your UserName"
+            placeholder="Enter Your Email"
             style={{ width: "85%", marginLeft: 3, height: 30 }}
           />
         </View>
