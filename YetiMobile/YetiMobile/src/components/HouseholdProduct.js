@@ -1,10 +1,18 @@
-import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
 import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  Image,
+  ActivityIndicator,
+  TextInput,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { BaseUrl } from "../../Database/BaseUrl";
 import axios from "axios";
 
-const RenderAllProducts = ({ item, index }) => {
+const RenderAllProducts = ({ item }) => {
   const navigation = useNavigation();
 
   // Check if the item has a valid id property
@@ -15,19 +23,23 @@ const RenderAllProducts = ({ item, index }) => {
   return (
     <TouchableOpacity
       onPress={() => navigation.navigate("ProductDetails", { id: item.id })}
-      className="ml-3 mr-3 bg-blue-200 rounded-3xl"
-      //style={{ height: 230, width: 180 }}
+      style={{
+        marginLeft: 3,
+        marginRight: 3,
+        backgroundColor: "#c3c3c3",
+        borderRadius: 10,
+        padding: 10,
+      }}
     >
-      <View className="flex-row items-center gap-x-4">
-        <View className="">
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View>
           <Image
-            className="rounded-3xl"
-            source={require("../../assets/images/5.jpg")} // Assuming you have an 'image' property in the seller profile
-            style={{ height: 120, width: 130 }}
+            source={require("../../assets/images/5.jpg")}
+            style={{ height: 120, width: 130, borderRadius: 10 }}
           />
         </View>
-        <View className="gap-y-2">
-          <Text className="text-xl font-bold">{item.name}</Text>
+        <View style={{ marginLeft: 10 }}>
+          <Text style={{ fontSize: 18, fontWeight: "bold" }}>{item.name}</Text>
           <Text>Address: {item.address}</Text>
         </View>
       </View>
@@ -37,16 +49,20 @@ const RenderAllProducts = ({ item, index }) => {
 
 const HouseholdProduct = () => {
   const [sellerProfiles, setSellerProfiles] = useState([]);
+  const [filteredSellerProfiles, setFilteredSellerProfiles] = useState([]);
   const [fetchError, setFetchError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     const fetchSellerProfiles = async () => {
       try {
+        setIsLoading(true);
         const response = await axios.get(`${BaseUrl}SellerProfile`);
         console.log("Response data:", response.data);
-
         if (response.data.isSuccess) {
           setSellerProfiles(response.data.result);
+          setFilteredSellerProfiles(response.data.result);
           setFetchError(null);
         } else {
           setFetchError(
@@ -54,28 +70,68 @@ const HouseholdProduct = () => {
           );
         }
       } catch (error) {
-        setFetchError("Error fetching seller profiles: " + error.message);
+        if (error.response && error.response.status === 404) {
+          setFetchError("No seller profiles found");
+        } else {
+          setFetchError("Error fetching seller profiles: " + error.message);
+        }
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchSellerProfiles();
   }, []);
 
+  const searchSellerProfiles = (text) => {
+    setSearchText(text);
+    const filteredProfiles = sellerProfiles.filter((profile) =>
+      profile.name.toLowerCase().includes(text.toLowerCase())
+    );
+    setFilteredSellerProfiles(filteredProfiles);
+  };
+
   return (
-    <View>
-      {fetchError ? (
+    <View style={{ flex: 1 }}>
+      {isLoading ? (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size="large" color="#0000ff" />
+          <Text style={{ marginTop: 16 }}>Loading...</Text>
+        </View>
+      ) : fetchError ? (
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
           <Text style={{ color: "red" }}>{fetchError}</Text>
         </View>
       ) : (
-        <FlatList
-          className=""
-          data={sellerProfiles}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => <RenderAllProducts item={item} />}
-          ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-        />
+        <View style={{ flex: 1 }}>
+          <View style={{ marginTop: 10, marginBottom: 10 }}>
+            <TextInput
+              placeholder="Search"
+              style={{
+                width: "90%",
+                marginLeft: "5%",
+                backgroundColor: "#fcd34d",
+                borderRadius: 20,
+                paddingLeft: 15,
+                height: 40,
+                fontSize: 16,
+                color: "#333",
+              }}
+              placeholderTextColor="#555"
+              value={searchText}
+              onChangeText={searchSellerProfiles}
+            />
+          </View>
+          <FlatList
+            data={filteredSellerProfiles}
+            renderItem={({ item }) => <RenderAllProducts item={item} />}
+            keyExtractor={(item) => item.id.toString()}
+            ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+          />
+        </View>
       )}
     </View>
   );

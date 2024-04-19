@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   FlatList,
   Alert,
+  TextInput,
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import {
@@ -24,17 +25,19 @@ import { cart } from "../../Database/CartItems";
 import { BaseUrl } from "../../Database/BaseUrl";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
+import BottomNav from "../../navigation/BottomNav";
 
 const ProductDetails = ({ route }) => {
   const navigation = useNavigation();
   const { id } = route.params || {};
-  const [foodItem, setFoodItem] = useState([]);
+  const [foodItems, setFoodItems] = useState([]);
+  const [filteredFoodItems, setFilteredFoodItems] = useState([]);
   const [fetchError, setFetchError] = useState(null);
   const { authData } = useContext(AuthContext);
 
   useEffect(() => {
     if (id) {
-      const fetchFoodItem = async () => {
+      const fetchFoodItems = async () => {
         try {
           const response = await axios.get(
             `${BaseUrl}FoodItem/GetAllFoodItem?id=${id}`
@@ -42,18 +45,19 @@ const ProductDetails = ({ route }) => {
           console.log("Response data:", response.data);
 
           if (response.data.isSuccess) {
-            setFoodItem(response.data.result);
+            setFoodItems(response.data.result);
+            setFilteredFoodItems(response.data.result);
             setFetchError(null);
           } else {
             setFetchError(
-              "Error fetching food item: " + response.data.errorMessage
+              "Error fetching food items: " + response.data.errorMessage
             );
           }
         } catch (error) {
-          setFetchError("Error fetching food item: " + error.message);
+          setFetchError("Error fetching food items: " + error.message);
         }
       };
-      fetchFoodItem();
+      fetchFoodItems();
     }
   }, [id]);
 
@@ -83,13 +87,21 @@ const ProductDetails = ({ route }) => {
     }
   };
 
+  const searchFoodItems = (text) => {
+    const filteredItems = foodItems.filter((item) =>
+      item.foodName.toLowerCase().includes(text.toLowerCase())
+    );
+    setFilteredFoodItems(filteredItems);
+  };
+
   return (
     <View className="flex-1 absolute w-full h-full">
-      <View>
-        <Image
-          source={require("../../assets/images/4.jpg")}
-          className="rounded-b-3xl"
-          style={{ height: 240, width: "100%" }}
+      <View className="mt-10 mb-2">
+        <TextInput
+          placeholder="Search"
+          className="w-11/12 mx-auto bg-yellow-200 rounded-xl py-2 px-2 h-12 text-slate-800"
+          onChangeText={searchFoodItems}
+          placeholderTextColor={"#555"}
         />
       </View>
 
@@ -102,7 +114,7 @@ const ProductDetails = ({ route }) => {
       ) : (
         <FlatList
           className=""
-          data={foodItem}
+          data={filteredFoodItems}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <RenderAllFoodItem item={item} addTocart={addTocart} />
@@ -130,7 +142,7 @@ const ProductDetails = ({ route }) => {
   );
 };
 
-const RenderAllFoodItem = ({ item, index, addTocart }) => {
+const RenderAllFoodItem = ({ item, addTocart }) => {
   return (
     <View className="flex-row items-center bg-blue-200 rounded-3xl w-11/12 mx-auto">
       <View className="mr-4">

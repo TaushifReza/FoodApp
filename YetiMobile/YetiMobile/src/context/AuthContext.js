@@ -8,7 +8,13 @@ export const AuthProvider = ({ children }) => {
   const [authData, setAuthData] = useState(null);
 
   const setAuthInfo = (data) => {
-    setAuthData(data);
+    if (data === null) {
+      // User is logging out, reset the authData
+      setAuthData(null);
+    } else {
+      // User is logging in, update the authData
+      setAuthData(data);
+    }
   };
 
   return (

@@ -10,6 +10,7 @@ namespace FoodAPI
         {
             CreateMap<SellerProfile, SellerProfileCreateDTO>().ReverseMap();
             CreateMap<SellerProfile, SellerProfileDTO>().ReverseMap();
+            CreateMap<SellerProfile, SellerProfileAdminDTO>().ReverseMap();
             CreateMap<Category, CategoryCreateDTO>().ReverseMap();
             CreateMap<Category, CategoryDTO>().ReverseMap();
             CreateMap<Category, CategoryUpdateDTO>().ReverseMap();
@@ -18,6 +19,7 @@ namespace FoodAPI
             CreateMap<ShoppingCart, ShoppingCartDTO>().ReverseMap();
             CreateMap<ShoppingCart, ShoppingCartAddDTO>().ReverseMap();
             CreateMap<OrderHeader, OrderHeaderCreateDTO>().ReverseMap();
+            CreateMap<OrderHeader, OrderHeaderDTO>().ReverseMap();
         }
     }
 }

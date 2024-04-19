@@ -15,6 +15,8 @@ import Route from "./Route";
 import ProductDetails from "../src/screens/ProductDetails";
 import Profile from "../src/screens/Profile";
 import Cart from "../src/screens/Cart";
+import DeliveryHome from "../src/screens/DeliveryHome";
+import OrderConfirmation from "../src/screens/OrderConfirmation";
 
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +41,8 @@ const AppNavigation = () => {
         <Stack.Screen name="ProductDetails" component={ProductDetails} />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="LogIn" component={LogIn} />
+        <Stack.Screen name="DeliveryHome" component={DeliveryHome} />
+        <Stack.Screen name="OrderConfirmation" component={OrderConfirmation} />
       </Stack.Navigator>
     </NavigationContainer>
   );

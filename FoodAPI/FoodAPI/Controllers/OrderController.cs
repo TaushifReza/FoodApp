@@ -11,6 +11,7 @@ using System.Security.Claims;
 using FoodAPI.Models.Models.Dto;
 using Microsoft.AspNetCore.Identity;
 using Stripe.Checkout;
+using Stripe;
 
 namespace FoodAPI.Controllers
 {
@@ -82,35 +83,28 @@ namespace FoodAPI.Controllers
                     await _dbOrderDetail.CreateAsync(orderDetail);
                 }
                 // Capture Payment
-                var options = new Stripe.Checkout.SessionCreateOptions {
-                    //SuccessUrl = "https://example.com/success",
-                    SuccessUrl = $"https://localhost:7041/api/Order/OrderConfirmation?id={orderHeader.Id}",
-                    CancelUrl = "https://example.com/cancel",
-                    LineItems = new List<SessionLineItemOptions>(),
-                    Mode = "payment",
+                var options = new PaymentIntentCreateOptions
+                {
+                    Amount = (long?)(orderHeader.OrderTotal*100),
+                    Currency = "npr",
+                    AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
+                    {
+                        Enabled = true,
+                    },
                 };
-                foreach (var cart in shoppingCart) {
-                    cart.FoodItem = await _dbFoodItem.GetAsync(u => u.Id == cart.FoodItemId);
-                    var sessionLineItem = new SessionLineItemOptions {
-                        PriceData = new SessionLineItemPriceDataOptions {
-                            UnitAmount = (long)((cart.Price / cart.Count)*100)!,
-                            Currency = "npr",
-                            ProductData = new SessionLineItemPriceDataProductDataOptions {
-                                Images = new List<string>() { cart.FoodItem.ImageUrl },
-                                Name = cart.FoodItem.FoodName
-                            }
-                        },
-                        Quantity = cart.Count
-                    };
-                    options.LineItems.Add(sessionLineItem);
-                }
-                var service = new Stripe.Checkout.SessionService();
-                Session session = await service.CreateAsync(options);
-                await _dbOrderHeader.UpdateStripePaymentIDAsync(orderHeader.Id, session.Id, session.PaymentIntentId);
-                //Response.Headers.Add("Location", session.Url);
-                //return new StatusCodeResult(303);
+                var service1 = new PaymentIntentService();
+                var paymentIntent = await service1.CreateAsync(options);
+                await _dbOrderHeader.UpdateStripePaymentIDAsync(orderHeader.Id, "sessionId", paymentIntent.ClientSecret);
 
-                _response.Result = session.Url;
+
+                //_response.Result = paymentIntent.ClientSecret;
+                _response.Result = new
+                {
+                    paymentIntentId = paymentIntent.ClientSecret,
+                    orderHeaderId = orderHeader.Id,
+                };
+                _response.IsSuccess = true;
+                _response.StatusCode = HttpStatusCode.Accepted;
                 return _response;
 
             }
@@ -121,19 +115,41 @@ namespace FoodAPI.Controllers
             return _response;
         }
 
+        [HttpPost("CancelOrder")]
+        [Authorize(Roles = SD.RoleCustomer)]
+        public async Task<ActionResult<APIResponse>> CancelOrder()
+        {
+            try
+            {
+                // Retrieve user claims from the JWT token
+                var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+                var shoppingCart = await _dbCart.GetAllAsync(u => u.ApplicationUserId == userId);
+                await _dbCart.RemoveRangeAsync(shoppingCart);
+
+                _response.Result = "Cart Item deleted";
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                return Ok(_response);
+            }
+            catch (Exception e)
+            {
+                _response.ErrorMessage = new List<string?>() { e.ToString() };
+            }
+            return _response;
+        }
+
+
         [HttpGet("OrderConfirmation")]
+        [Authorize(Roles = SD.RoleCustomer)]
         public async Task<ActionResult<APIResponse>> OrderConfirmation(int id)
         {
             try
             {
-                var orderHeader = await _dbOrderHeader.GetAsync(u=>u.Id==id);
-                var service = new SessionService();
-                var session = await service.GetAsync(orderHeader.SessionId);
+                // Retrieve user claims from the JWT token
+                var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
-                if (session.PaymentStatus.ToLower() == "paid") {
-                    await _dbOrderHeader.UpdateStripePaymentIDAsync(id, session.Id, session.PaymentIntentId);
-                    await _dbOrderHeader.UpdateStatusAsync(id, SD.OrderStatusApproved, SD.PaymentStatusApproved);
-                }
+                var orderHeader = await _dbOrderHeader.GetAsync(u=>u.Id==id);
+                await _dbOrderHeader.UpdateStatusAsync(id, SD.OrderStatusApproved, SD.PaymentStatusApproved);
                 // Clear Shopping cart
                 var shoppingCarts =
                     await _dbCart.GetAllAsync(u => u.ApplicationUserId == orderHeader.ApplicationUserId);
@@ -149,6 +165,76 @@ namespace FoodAPI.Controllers
                 _response.ErrorMessage = new List<string?>() { e.ToString() };
             }
             return _response;
+        }
+
+        [HttpGet("GetPendingOrder")]
+        //[Authorize(Roles = SD.RoleDeliveryRider)]
+        public async Task<ActionResult<APIResponse>> GetPendingOrder()
+        {
+            try
+            {
+                var orderHeader = await _dbOrderHeader.GetAllAsync(u =>
+                    u.OrderStatus == SD.OrderStatusApproved && u.PaymentStatus == SD.PaymentStatusApproved);
+
+                if (orderHeader == null)
+                {
+                    _response.Result = "No pending Order";
+                    _response.StatusCode = HttpStatusCode.OK;
+                    _response.IsSuccess = true;
+                    return Ok(_response);
+                }
+                _response.Result = _mapper.Map<List<OrderHeaderDTO>>(orderHeader);
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                return Ok(_response);
+
+            }
+            catch (Exception e)
+            {
+                _response.ErrorMessage = new List<string?>() { e.ToString() };
+            }
+            return _response;
+        }
+
+        [HttpGet("ShippedOrder")]
+        [Authorize(Roles = SD.RoleDeliveryRider)]
+        public async Task<ActionResult<APIResponse>> ShippedOrder(int id)
+        {
+            try
+            {
+                var orderHeader = await _dbOrderHeader.GetAsync(u => u.Id == id);
+                if (orderHeader == null)
+                {
+                    _response.Result = "Order not found";
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    _response.IsSuccess = false;
+                    return Ok(_response);
+                }
+                orderHeader.OrderStatus = SD.OrderStatusShipped;
+                await _dbOrderHeader.UpdateAsync(orderHeader);
+
+                _response.Result = "Order has been Shipped";
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                return Ok(_response);
+            }
+            catch (Exception e)
+            {
+                _response.ErrorMessage = new List<string?>() { e.ToString() };
+            }
+            return _response;
+        }
+
+        [HttpGet("GetAllOrder")]
+        [Authorize(Roles = $"{SD.RoleRestaurantSeller}, {SD.RoleIndividualSeller}")]
+        public async Task<ActionResult<APIResponse>> GetAllOrder()
+        {
+            var orderHeader = await _dbOrderHeader.GetAllAsync(u=>u.OrderStatus==SD.OrderStatusApproved && u.PaymentStatus==SD.PaymentStatusApproved);
+
+            _response.Result = _mapper.Map<List<OrderHeaderDTO>>(orderHeader);
+            _response.StatusCode = HttpStatusCode.OK;
+            _response.IsSuccess = true;
+            return Ok(_response);
         }
     }
 }

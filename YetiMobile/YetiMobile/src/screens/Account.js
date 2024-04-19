@@ -1,10 +1,18 @@
 import { View, Text, TouchableOpacity,Image } from 'react-native'
-import React from 'react'
+import React, { useContext, useState } from "react";
 import {ArrowLeftOnRectangleIcon,ChevronRightIcon} from 'react-native-heroicons/outline'
 import { useNavigation } from '@react-navigation/native'
+import { AuthContext } from "../context/AuthContext";
 
 const Account = () => {
   const navigation = useNavigation();
+  const { authData } = useContext(AuthContext);
+  const { setAuthInfo } = useContext(AuthContext);
+
+  const logout = ()=>{
+    setAuthInfo(null);
+    navigation.navigate("LogIn")
+  }
   return (
     <View>
     <View className='mt-14 justify-between items-center flex-row'>
@@ -15,12 +23,12 @@ const Account = () => {
     </View>
     <View className='flex-row items-center'>
     <View>
-    <Image source={require('../../assets/images/profile.jpg')} 
+    <Image source={require('../../assets/images/defultProfile.png')} 
     className='w-24 h-24 rounded-full ml-7 mt-8'/>
     </View>
     <View className='mt-6 ml-3'>
-    <Text className='text-lg'>Aryan Dhamala</Text>
-    <Text className='font-thin mt-2'>aryandhamala8@gmail.com</Text>
+    <Text className='text-lg'>{authData.fullName}</Text>
+    <Text className='font-thin mt-2'>{authData.email}</Text>
     </View>
     </View>
 
@@ -57,7 +65,7 @@ const Account = () => {
     </View>
     </TouchableOpacity>
     </View>
-    <TouchableOpacity className='bg-yellow-400 rounded-2xl h-12 w-52 ml-24 mt-20'>
+    <TouchableOpacity className='bg-yellow-400 rounded-2xl h-12 w-52 ml-24 mt-20' onPress={logout}>
     <Text className='text-xl font-medium text-white text-center pt-2'>Log Out</Text>
     </TouchableOpacity>
     </View>
