@@ -43,7 +43,7 @@ This is a multi-vendor food delivery application built using ASP.NET Web API and
     - Google Cloud account for SMTP server access (if using)
 2. **Clone the Repository:**
     ```bash
-    git clone https://github.com/TaushifReza/food-delivery-app.git
+    git clone https://github.com/TaushifReza/FoodApp.git
     ```
 3. **Set Up Database:**
     - Create a database in MS SQL Server.
