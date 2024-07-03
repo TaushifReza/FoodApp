@@ -59,8 +59,8 @@ This is a multi-vendor food delivery application built using ASP.NET Web API and
 
 ## **Contributing:**
 
-(Optional: If you welcome contributions, explain the process and guidelines.)
+Contributions are welcome! Please fork the repository and submit pull requests for any enhancements or bug fixes.
 
 ## **License:**
 
-(Specify the license used for your project, e.g., MIT, Apache, etc.)
+This project is licensed under the MIT License. See the LICENSE file for more details.
