@@ -32,7 +32,7 @@ This is a multi-vendor food delivery application built using ASP.NET Web API and
 * **`Mobile App (React Native):`** Native mobile app experience for customers.
 * **`Shared (Optional):`** Common code shared between the frontend and mobile app (if applicable).
 * **`Documentation (Optional):`** Provide API documentation or user guides.
-* **`Tests (Optional):`** Unit and integration tests for code quality.
+* **`Tests:`** Unit and integration tests for code quality.
 
 ## **Getting Started:**
 
@@ -43,7 +43,7 @@ This is a multi-vendor food delivery application built using ASP.NET Web API and
     - Google Cloud account for SMTP server access (if using)
 2. **Clone the Repository:**
     ```bash
-    git clone https://github.com/<your-username>/food-delivery-app.git
+    git clone https://github.com/TaushifReza/food-delivery-app.git
     ```
 3. **Set Up Database:**
     - Create a database in MS SQL Server.
